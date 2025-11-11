@@ -226,7 +226,7 @@ This project is open source and available under the MIT License.
 
 **Made with ❤️ and lots of ☕**
 
-🌐 Visit the live site: [Portfolio Website](ajcodex.com)
+🌐 Visit the live site: [Portfolio Website](https://ajcodex.com)
 
 ⭐ **If you like this project, give it a star!** ⭐
 
