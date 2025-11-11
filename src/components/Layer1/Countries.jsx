@@ -1,179 +1,210 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { countries } from '../../data/countries';
 
 const Countries = () => {
-  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [hoveredCountry, setHoveredCountry] = useState(null);
 
-  const countries = [
-    {
-      name: "Yemen",
-      flag: "🇾🇪",
-      years: "Born - Age 4",
-      color: "from-red-600 to-red-800",
-      story: "Where it all began. The foundations of who I am.",
-      food: "☕ Qahwa (Yemeni Coffee)",
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3,
+      },
     },
-    {
-      name: "Malaysia",
-      flag: "🇲🇾",
-      years: "Age 4 - 24 (20 Years)",
-      color: "from-blue-600 to-blue-800",
-      story: "Home. Where I grew up, learned, and became who I am today.",
-      food: "🍚 Nasi Lemak",
-      highlight: true
-    },
-    {
-      name: "Netherlands",
-      flag: "🇳🇱",
-      years: "Present",
-      color: "from-orange-600 to-red-600",
-      story: "Building my future, one line of code at a time.",
-      food: "🧇 Stroopwafel",
-    }
-  ];
+  };
+
+  const countryVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0 },
+  };
 
   return (
-    <div className="py-20">
-      {/* Section Title */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-        className="text-center mb-16"
-      >
-        <h3 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-          Countries That Shaped Me
-        </h3>
-        <p className="text-gray-400 text-lg">
-          A journey across continents, cultures, and code
-        </p>
-      </motion.div>
+    <section id="countries" className="py-20 px-4 md:px-8 bg-gradient-to-b from-gray-900 to-black">
+      <div className="max-w-6xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl md:text-6xl font-bold mb-4">
+            <span className="text-gradient">Countries That Shaped Me</span>
+          </h2>
+          <p className="text-gray-400 text-lg">A journey across three continents</p>
+        </motion.div>
 
-      {/* Timeline */}
-      <div className="relative">
-        {/* Connecting Line */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-red-500 via-blue-500 to-orange-500 hidden md:block"></div>
-
-        {/* Country Cards */}
-        <div className="space-y-24">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+        >
           {countries.map((country, index) => (
             <motion.div
-              key={country.name}
-              initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.2 }}
-              viewport={{ once: true }}
-              className={`flex items-center ${
-                index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
-              } flex-col gap-8`}
+              key={country.id}
+              variants={countryVariants}
+              className="relative group"
+              onMouseEnter={() => setHoveredCountry(country.id)}
+              onMouseLeave={() => setHoveredCountry(null)}
             >
-              {/* Card */}
-              <div className="w-full md:w-5/12">
+              <motion.div
+                className="bg-gradient-to-br from-gray-800 to-gray-900 p-6 rounded-2xl border border-gray-700 hover:border-purple-500 transition-all duration-300 relative overflow-hidden"
+                whileHover={{ scale: 1.05, y: -10 }}
+                transition={{ type: 'spring', stiffness: 300 }}
+              >
+                {/* Glow effect */}
                 <motion.div
-                  whileHover={{ scale: 1.05, y: -10 }}
-                  onClick={() => setSelectedCountry(selectedCountry === index ? null : index)}
-                  className={`bg-gradient-to-br ${country.color} p-8 rounded-2xl shadow-2xl cursor-pointer relative overflow-hidden
-                    ${country.highlight ? 'ring-4 ring-yellow-400' : ''}
-                  `}
-                >
-                  {/* Highlight badge */}
-                  {country.highlight && (
-                    <motion.div 
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 0.5, type: "spring" }}
-                      className="absolute top-4 right-4 bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-bold"
-                    >
-                      HOME
-                    </motion.div>
-                  )}
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{
+                    background: `radial-gradient(circle at center, ${country.color}20, transparent 70%)`,
+                  }}
+                />
 
-                  {/* Flag */}
-                  <motion.div 
-                    className="text-7xl mb-4"
-                    whileHover={{ scale: 1.2, rotate: 5 }}
+                {/* Country SVG Shape */}
+                <div className="relative mb-6 h-40 flex items-center justify-center">
+                  <svg
+                    viewBox="0 0 120 100"
+                    className="w-full h-full"
+                    style={{ filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))' }}
                   >
-                    {country.flag}
-                  </motion.div>
+                    <motion.path
+                      d={country.svgPath}
+                      fill={country.color}
+                      stroke={country.color}
+                      strokeWidth="1"
+                      initial={{ pathLength: 0, opacity: 0 }}
+                      whileInView={{ pathLength: 1, opacity: 0.8 }}
+                      transition={{ duration: 2, delay: index * 0.3 }}
+                      viewport={{ once: true }}
+                    />
+                    <motion.path
+                      d={country.svgPath}
+                      fill="none"
+                      stroke={country.color}
+                      strokeWidth="2"
+                      initial={{ pathLength: 0 }}
+                      animate={hoveredCountry === country.id ? { pathLength: 1 } : { pathLength: 0 }}
+                      transition={{ duration: 1 }}
+                      style={{ filter: 'blur(4px)' }}
+                    />
+                  </svg>
 
-                  {/* Country Info */}
-                  <h3 className="text-4xl font-bold text-white mb-2">
+                  {/* Animated particles around country */}
+                  {hoveredCountry === country.id && (
+                    <>
+                      {[...Array(8)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          className="absolute w-1 h-1 rounded-full"
+                          style={{ backgroundColor: country.color }}
+                          initial={{
+                            x: '50%',
+                            y: '50%',
+                            opacity: 1,
+                          }}
+                          animate={{
+                            x: `${50 + Math.cos((i * Math.PI) / 4) * 100}%`,
+                            y: `${50 + Math.sin((i * Math.PI) / 4) * 100}%`,
+                            opacity: 0,
+                          }}
+                          transition={{
+                            duration: 1.5,
+                            repeat: Infinity,
+                            ease: 'easeOut',
+                          }}
+                        />
+                      ))}
+                    </>
+                  )}
+                </div>
+
+                {/* Country Info */}
+                <div className="relative z-10 text-center">
+                  <div className="flex items-center justify-center gap-2 mb-3">
+                    <span className="text-4xl">{country.flag}</span>
+                    {country.isHome && (
+                      <motion.span
+                        className="px-2 py-1 bg-gradient-to-r from-pink-500 to-purple-500 text-xs rounded-full font-bold"
+                        animate={{ scale: [1, 1.1, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        HOME
+                      </motion.span>
+                    )}
+                  </div>
+
+                  <h3 className="text-2xl font-bold mb-2" style={{ color: country.color }}>
                     {country.name}
                   </h3>
-                  <p className="text-white/80 text-lg mb-4">{country.years}</p>
-                  <p className="text-white/90 text-base leading-relaxed">
-                    {country.story}
-                  </p>
 
-                  {/* Food Easter Egg */}
+                  <div className="mb-3">
+                    <span className="text-sm text-gray-400">{country.label}: </span>
+                    <span className="text-white font-semibold">{country.period}</span>
+                  </div>
+
                   <motion.div
-                    initial={{ opacity: 0, height: 0 }}
+                    initial={{ height: 0, opacity: 0 }}
                     animate={
-                      selectedCountry === index
-                        ? { opacity: 1, height: 'auto' }
-                        : { opacity: 0, height: 0 }
+                      hoveredCountry === country.id
+                        ? { height: 'auto', opacity: 1 }
+                        : { height: 0, opacity: 0 }
                     }
-                    className="mt-4 pt-4 border-t border-white/30 overflow-hidden"
+                    transition={{ duration: 0.3 }}
+                    className="overflow-hidden"
                   >
-                    <p className="text-white/90 text-lg">
-                      {country.food}
-                    </p>
-                    <p className="text-white/70 text-sm mt-1">
-                      The taste of {country.name}
-                    </p>
+                    <p className="text-sm text-gray-300 mb-2">{country.description}</p>
+                    <p className="text-lg">{country.funFact}</p>
+
+                    {country.nasiLemakEmoji && (
+                      <motion.div
+                        className="mt-3"
+                        animate={{ rotate: [0, -10, 10, 0] }}
+                        transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
+                      >
+                        <span className="text-3xl">{country.nasiLemakEmoji}</span>
+                      </motion.div>
+                    )}
                   </motion.div>
+                </div>
 
-                  {/* Click hint */}
-                  <motion.div 
-                    className="mt-4 text-white/50 text-sm"
-                    animate={{ opacity: [0.5, 1, 0.5] }}
-                    transition={{ repeat: Infinity, duration: 2 }}
-                  >
-                    {selectedCountry === index ? '↑ Click to hide' : '↓ Click to reveal hidden treasure'}
-                  </motion.div>
-                </motion.div>
-              </div>
-
-              {/* Timeline Dot */}
-              <div className="hidden md:block w-2/12 flex justify-center">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  whileHover={{ scale: 1.5 }}
-                  transition={{ type: "spring" }}
-                  className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 ring-4 ring-black"
-                ></motion.div>
-              </div>
-
-              {/* Spacer */}
-              <div className="w-full md:w-5/12"></div>
+                {/* Decorative corner */}
+                <div
+                  className="absolute top-0 right-0 w-20 h-20 opacity-10"
+                  style={{
+                    background: `linear-gradient(135deg, transparent 50%, ${country.color} 50%)`,
+                  }}
+                />
+              </motion.div>
             </motion.div>
           ))}
-        </div>
-      </div>
-
-      {/* Journey Summary */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-        className="mt-20 text-center"
-      >
-        <motion.div 
-          whileHover={{ scale: 1.05 }}
-          className="inline-block bg-gradient-to-r from-red-600 via-blue-600 to-orange-600 p-6 rounded-2xl cursor-pointer"
-        >
-          <p className="text-white text-2xl font-semibold">
-            🇾🇪 → 🇲🇾 → 🇳🇱
-          </p>
-          <p className="text-white/80 mt-2">
-            Three countries. One journey. Infinite possibilities.
-          </p>
         </motion.div>
-      </motion.div>
-    </div>
+
+        {/* Journey Summary */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="mt-16 text-center"
+        >
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="inline-block bg-gradient-to-r from-red-600 via-blue-600 to-orange-600 p-6 rounded-2xl cursor-pointer"
+          >
+            <p className="text-white text-2xl font-semibold">
+              🇾🇪 → 🇲🇾 → 🇳🇱
+            </p>
+            <p className="text-white/80 mt-2">
+              Three countries. One journey. Infinite possibilities.
+            </p>
+          </motion.div>
+        </motion.div>
+      </div>
+    </section>
   );
 };
 
