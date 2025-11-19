@@ -1,199 +1,216 @@
-import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { WindowProvider, useWindow } from '../context/WindowManagerContext';
+import Taskbar from '../components/Layer2/OS/Taskbar';
+import DesktopIcon from '../components/Layer2/OS/DesktopIcon';
+import Window from '../components/Layer2/OS/Window';
 import Skills from '../components/Layer2/Skills';
 import ProjectsList from '../components/Layer2/ProjectsList';
 import Contact from '../components/Layer2/Contact';
-import Chatbot from '../components/Layer2/Chatbot';
 import AJRobot from '../components/shared/AJRobot';
 import ThemeToggle from '../components/shared/ThemeToggle';
-import Terminal from '../components/Layer2/Terminal';
 import { aboutMe } from '../data/skills';
 
-const Layer2 = () => {
-  const [activeTab, setActiveTab] = useState('about');
+// Desktop Content Component
+const Desktop = () => {
+  const { openWindow, windows } = useWindow();
+  const [isBooting, setIsBooting] = useState(true);
+  const [bootStep, setBootStep] = useState(0);
 
-  const tabs = [
-    { id: 'about', label: 'README.md', icon: '=�' },
-    { id: 'skills', label: 'skills.json', icon: '�' },
-    { id: 'projects', label: 'projects.md', icon: '=�' },
-    { id: 'contact', label: 'contact.sh', icon: '=�' },
+  // Boot sequence
+  useEffect(() => {
+    const bootSequence = async () => {
+      await new Promise(r => setTimeout(r, 500));
+      setBootStep(1); // BIOS
+      await new Promise(r => setTimeout(r, 1000));
+      setBootStep(2); // Loading OS
+      await new Promise(r => setTimeout(r, 1500));
+      setBootStep(3); // Welcome
+      await new Promise(r => setTimeout(r, 800));
+      setIsBooting(false);
+
+      // Open Readme after boot
+      setTimeout(() => {
+        openWindow(apps[0].id, apps[0].title, apps[0].component, apps[0].icon);
+      }, 500);
+    };
+
+    bootSequence();
+  }, []);
+
+  // Define apps
+  const apps = [
+    {
+      id: 'about',
+      title: 'README.md',
+      icon: '📝',
+      component: <AboutContent />,
+    },
+    {
+      id: 'skills',
+      title: 'skills.json',
+      icon: '⚡',
+      component: <Skills />,
+    },
+    {
+      id: 'projects',
+      title: 'projects.md',
+      icon: '🚀',
+      component: <ProjectsList />,
+    },
+    {
+      id: 'contact',
+      title: 'contact.sh',
+      icon: '📫',
+      component: <Contact />,
+    },
+    {
+      id: 'terminal',
+      title: 'Terminal',
+      icon: '💻',
+      component: <div className="p-4 font-mono text-green-400">Welcome to AJ-OS v1.0...<br />Type 'help' for commands.</div>,
+    }
   ];
 
+  if (isBooting) {
+    return (
+      <div className="min-h-screen bg-black flex flex-col items-center justify-center font-mono text-white">
+        {bootStep === 1 && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <p>AJ-BIOS (C) 2025</p>
+            <p>Checking Memory... OK</p>
+            <p>Detecting Primary Master... AJ_PORTFOLIO_DRIVE</p>
+          </motion.div>
+        )}
+        {bootStep === 2 && (
+          <motion.div className="flex flex-col items-center gap-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+            <p>Loading AJ-OS...</p>
+          </motion.div>
+        )}
+        {bootStep === 3 && (
+          <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}>
+            <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
+              Welcome
+            </h1>
+          </motion.div>
+        )}
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
-      {/* Theme Toggle */}
-      <ThemeToggle />
+    <div className="min-h-screen bg-cover bg-center relative overflow-hidden"
+      style={{
+        backgroundImage: `url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')`,
+        backgroundSize: 'cover'
+      }}>
 
-      {/* AJ Robot Navigation */}
+      {/* Overlay for better visibility */}
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
+
+      {/* Desktop Icons Grid */}
+      <div className="relative z-10 p-8 grid grid-cols-1 gap-8 w-min">
+        {apps.map((app) => (
+          <DesktopIcon
+            key={app.id}
+            title={app.title}
+            icon={app.icon}
+            onClick={() => openWindow(app.id, app.title, app.component, app.icon)}
+          />
+        ))}
+      </div>
+
+      {/* Windows Area */}
+      <AnimatePresence>
+        {windows.map((window) => (
+          <Window
+            key={window.id}
+            id={window.id}
+            title={window.title}
+            icon={window.icon}
+            zIndex={window.zIndex}
+          >
+            {window.component}
+          </Window>
+        ))}
+      </AnimatePresence>
+
+      {/* Taskbar */}
+      <Taskbar />
+
+      {/* Shared Components */}
       <AJRobot />
+      <ThemeToggle />
+    </div>
+  );
+};
 
-      {/* Chatbot */}
-      <Chatbot />
-
+// About Content Component (Extracted from previous Layer2)
+const AboutContent = () => {
+  return (
+    <div className="space-y-6 text-gray-300">
       {/* Header */}
-      <div className="border-b border-gray-700 bg-gray-900/50 backdrop-blur-sm sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <motion.div
-                className="text-4xl"
-                animate={{
-                  rotate: [0, 10, -10, 0],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  repeatDelay: 3,
-                }}
-              >
-                =�
-              </motion.div>
-              <div>
-                <h1 className="text-2xl font-bold font-mono text-gradient">AJ-OS v1.0</h1>
-                <p className="text-sm text-gray-400">Professional Workspace</p>
-              </div>
-            </div>
-
-            <div className="hidden md:flex items-center gap-4 text-sm text-gray-400">
-              <span className="flex items-center gap-2">
+      <div className="border-b border-gray-700 pb-6">
+        <h1 className="text-4xl font-bold text-white mb-3">{aboutMe.name}</h1>
+        <p className="text-xl text-gray-400 mb-2">{aboutMe.title}</p>
+        <div className="flex items-center gap-4 text-sm text-gray-500">
+          <span className="flex items-center gap-2">
+            📍 {aboutMe.location}
+          </span>
+          <span className="flex items-center gap-2">
+            {aboutMe.available ? (
+              <>
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                Online
-              </span>
-              <span>|</span>
-              <span>Netherlands</span>
-            </div>
-          </div>
-
-          {/* Tabs */}
-          <div className="flex gap-2 overflow-x-auto">
-            {tabs.map((tab) => (
-              <motion.button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-4 py-2 rounded-t-lg font-mono text-sm whitespace-nowrap transition-colors ${
-                  activeTab === tab.id
-                    ? 'bg-gray-800 text-white border-t-2 border-purple-500'
-                    : 'bg-gray-900/50 text-gray-400 hover:text-white hover:bg-gray-800/50'
-                }`}
-                whileHover={{ y: -2 }}
-                whileTap={{ y: 0 }}
-              >
-                <span className="mr-2">{tab.icon}</span>
-                {tab.label}
-              </motion.button>
-            ))}
-          </div>
+                Available for work
+              </>
+            ) : (
+              'Currently unavailable'
+            )}
+          </span>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          {activeTab === 'about' && (
-            <Terminal title="README.md">
-              <div>
-                <motion.p
-                  className="text-green-400 mb-6"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                >
-                  $ cat README.md
-                </motion.p>
-
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className="space-y-6"
-                >
-                  {/* Header */}
-                  <div className="border-b border-gray-700 pb-6">
-                    <h1 className="text-4xl font-bold text-gradient mb-3">{aboutMe.name}</h1>
-                    <p className="text-xl text-gray-300 mb-2">{aboutMe.title}</p>
-                    <div className="flex items-center gap-4 text-sm text-gray-400">
-                      <span className="flex items-center gap-2">
-                        =� {aboutMe.location}
-                      </span>
-                      <span className="flex items-center gap-2">
-                        {aboutMe.available ? (
-                          <>
-                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                            Available for work
-                          </>
-                        ) : (
-                          'Currently unavailable'
-                        )}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Bio */}
-                  <div>
-                    <h2 className="text-sky-400 text-lg mb-3 font-semibold">## About</h2>
-                    <div className="text-gray-300 leading-relaxed space-y-3">
-                      {aboutMe.fullBio.split('\n\n').map((paragraph, i) => (
-                        <p key={i}>{paragraph}</p>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Journey */}
-                  <div>
-                    <h2 className="text-purple-400 text-lg mb-3 font-semibold">## My Journey</h2>
-                    <div className="space-y-2 text-gray-300">
-                      <p>Born in Yemen <span className="text-gray-400">(0-3 years)</span></p>
-                      <p>Grew up in Malaysia <span className="text-gray-400">(4-27 years)</span></p>
-                      <p>Now in the Netherlands <span className="text-gray-400">(28+)</span></p>
-                    </div>
-                  </div>
-
-                  {/* Quick Facts */}
-                  <div>
-                    <h2 className="text-pink-400 text-lg mb-3 font-semibold">## Quick Facts</h2>
-                    <ul className="space-y-2 text-gray-300">
-                      <li>Manchester United fan (GGMU!)</li>
-                      <li>CR7 admirer (SIUUUU!)</li>
-                      <li>Nasi Lemak enthusiast</li>
-                      <li>Passionate gamer</li>
-                      <li>Animation lover</li>
-                    </ul>
-                  </div>
-
-                  {/* Contact CTA */}
-                  <div className="bg-gray-800 border border-gray-700 rounded-lg p-6">
-                    <h3 className="text-white font-semibold mb-2">Let's work together!</h3>
-                    <p className="text-gray-400 text-sm mb-4">
-                      I'm always open to discussing new projects and opportunities.
-                    </p>
-                    <button
-                      onClick={() => setActiveTab('contact')}
-                      className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-shadow"
-                    >
-                      View Contact Info �
-                    </button>
-                  </div>
-                </motion.div>
-              </div>
-            </Terminal>
-          )}
-
-          {activeTab === 'skills' && <Skills />}
-          {activeTab === 'projects' && <ProjectsList />}
-          {activeTab === 'contact' && <Contact />}
-        </motion.div>
+      {/* Bio */}
+      <div>
+        <h2 className="text-sky-400 text-lg mb-3 font-semibold">## About</h2>
+        <div className="leading-relaxed space-y-3">
+          {aboutMe.fullBio.split('\n\n').map((paragraph, i) => (
+            <p key={i}>{paragraph}</p>
+          ))}
+        </div>
       </div>
 
-      {/* Footer */}
-      <footer className="border-t border-gray-700 mt-20 py-8 px-4 text-center text-gray-500 text-sm font-mono">
-        <p>AJ-OS v1.0 " Built with React & Framer Motion</p>
-        <p className="mt-2">� 2025 AJ. All rights reserved.</p>
-      </footer>
+      {/* Journey */}
+      <div>
+        <h2 className="text-purple-400 text-lg mb-3 font-semibold">## My Journey</h2>
+        <div className="space-y-2">
+          <p>Born in Yemen <span className="text-gray-500">(0-3 years)</span></p>
+          <p>Grew up in Malaysia <span className="text-gray-500">(4-27 years)</span></p>
+          <p>Now in the Netherlands <span className="text-gray-500">(28+)</span></p>
+        </div>
+      </div>
+
+      {/* Quick Facts */}
+      <div>
+        <h2 className="text-pink-400 text-lg mb-3 font-semibold">## Quick Facts</h2>
+        <ul className="space-y-2 list-disc list-inside">
+          <li>Manchester United fan (GGMU!)</li>
+          <li>CR7 admirer (SIUUUU!)</li>
+          <li>Nasi Lemak enthusiast</li>
+          <li>Passionate gamer</li>
+          <li>Animation lover</li>
+        </ul>
+      </div>
     </div>
+  );
+};
+
+const Layer2 = () => {
+  return (
+    <WindowProvider>
+      <Desktop />
+    </WindowProvider>
   );
 };
 
