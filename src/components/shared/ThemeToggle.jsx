@@ -7,7 +7,7 @@ const ThemeToggle = () => {
   return (
     <motion.button
       onClick={toggleTheme}
-      className="fixed top-8 right-8 z-40 p-3 rounded-full bg-gray-800/50 backdrop-blur-sm border border-gray-700 hover:border-purple-500 transition-colors"
+      className="fixed top-4 right-4 z-40 p-3 rounded-full bg-white/10 dark:bg-white/5 backdrop-blur-md border border-primary/30 dark:border-primary/30 hover:border-primary dark:hover:border-primary transition-all duration-300"
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
       title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}

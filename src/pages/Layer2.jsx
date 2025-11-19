@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { WindowProvider, useWindow } from '../context/WindowManagerContext';
+import { useWindow } from '../context/WindowManagerContext';
 import Taskbar from '../components/Layer2/OS/Taskbar';
 import DesktopIcon from '../components/Layer2/OS/DesktopIcon';
 import Window from '../components/Layer2/OS/Window';
@@ -11,34 +11,73 @@ import AJRobot from '../components/shared/AJRobot';
 import ThemeToggle from '../components/shared/ThemeToggle';
 import { aboutMe } from '../data/skills';
 
+// About Content Component (Extracted from previous Layer2)
+const AboutContent = () => {
+  return (
+    <div className="space-y-6 text-gray-300">
+      {/* Header */}
+      <div className="border-b border-gray-700 pb-6">
+        <h1 className="text-4xl font-bold text-white mb-3">{aboutMe.name}</h1>
+        <p className="text-xl text-gray-400 mb-2">{aboutMe.title}</p>
+        <div className="flex items-center gap-4 text-sm text-gray-500">
+          <span className="flex items-center gap-2">
+            📍 {aboutMe.location}
+          </span>
+          <span className="flex items-center gap-2">
+            {aboutMe.available ? (
+              <>
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                Available for work
+              </>
+            ) : (
+              'Currently unavailable'
+            )}
+          </span>
+        </div>
+      </div>
+
+      {/* Bio */}
+      <div>
+        <h2 className="text-sky-400 text-lg mb-3 font-semibold">## About</h2>
+        <div className="leading-relaxed space-y-3">
+          {aboutMe.fullBio.split('\n\n').map((paragraph, i) => (
+            <p key={i}>{paragraph}</p>
+          ))}
+        </div>
+      </div>
+
+      {/* Journey */}
+      <div>
+        <h2 className="text-purple-400 text-lg mb-3 font-semibold">## My Journey</h2>
+        <div className="space-y-2">
+          <p>Born in Yemen <span className="text-gray-500">(0-3 years)</span></p>
+          <p>Grew up in Malaysia <span className="text-gray-500">(4-27 years)</span></p>
+          <p>Now in the Netherlands <span className="text-gray-500">(28+)</span></p>
+        </div>
+      </div>
+
+      {/* Quick Facts */}
+      <div>
+        <h2 className="text-pink-400 text-lg mb-3 font-semibold">## Quick Facts</h2>
+        <ul className="space-y-2 list-disc list-inside">
+          <li>Manchester United fan (GGMU!)</li>
+          <li>CR7 admirer (SIUUUU!)</li>
+          <li>Nasi Lemak enthusiast</li>
+          <li>Passionate gamer</li>
+          <li>Animation lover</li>
+        </ul>
+      </div>
+    </div>
+  );
+};
+
 // Desktop Content Component
-const Desktop = () => {
+const Desktop = ({ onSwitch }) => {
   const { openWindow, windows } = useWindow();
   const [isBooting, setIsBooting] = useState(true);
   const [bootStep, setBootStep] = useState(0);
 
-  // Boot sequence
-  useEffect(() => {
-    const bootSequence = async () => {
-      await new Promise(r => setTimeout(r, 500));
-      setBootStep(1); // BIOS
-      await new Promise(r => setTimeout(r, 1000));
-      setBootStep(2); // Loading OS
-      await new Promise(r => setTimeout(r, 1500));
-      setBootStep(3); // Welcome
-      await new Promise(r => setTimeout(r, 800));
-      setIsBooting(false);
-
-      // Open Readme after boot
-      setTimeout(() => {
-        openWindow(apps[0].id, apps[0].title, apps[0].component, apps[0].icon);
-      }, 500);
-    };
-
-    bootSequence();
-  }, []);
-
-  // Define apps
+  // Define apps (moved before useEffect)
   const apps = [
     {
       id: 'about',
@@ -71,6 +110,27 @@ const Desktop = () => {
       component: <div className="p-4 font-mono text-green-400">Welcome to AJ-OS v1.0...<br />Type 'help' for commands.</div>,
     }
   ];
+
+  // Boot sequence
+  useEffect(() => {
+    const bootSequence = async () => {
+      await new Promise(r => setTimeout(r, 500));
+      setBootStep(1); // BIOS
+      await new Promise(r => setTimeout(r, 1000));
+      setBootStep(2); // Loading OS
+      await new Promise(r => setTimeout(r, 1500));
+      setBootStep(3); // Welcome
+      await new Promise(r => setTimeout(r, 800));
+      setIsBooting(false);
+
+      // Open Readme after boot
+      setTimeout(() => {
+        openWindow(apps[0].id, apps[0].title, apps[0].component, apps[0].icon);
+      }, 500);
+    };
+
+    bootSequence();
+  }, [openWindow]);
 
   if (isBooting) {
     return (
@@ -140,78 +200,14 @@ const Desktop = () => {
       <Taskbar />
 
       {/* Shared Components */}
-      <AJRobot />
+      <AJRobot onSwitch={onSwitch} isLayer1={false} />
       <ThemeToggle />
     </div>
   );
 };
 
-// About Content Component (Extracted from previous Layer2)
-const AboutContent = () => {
-  return (
-    <div className="space-y-6 text-gray-300">
-      {/* Header */}
-      <div className="border-b border-gray-700 pb-6">
-        <h1 className="text-4xl font-bold text-white mb-3">{aboutMe.name}</h1>
-        <p className="text-xl text-gray-400 mb-2">{aboutMe.title}</p>
-        <div className="flex items-center gap-4 text-sm text-gray-500">
-          <span className="flex items-center gap-2">
-            📍 {aboutMe.location}
-          </span>
-          <span className="flex items-center gap-2">
-            {aboutMe.available ? (
-              <>
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                Available for work
-              </>
-            ) : (
-              'Currently unavailable'
-            )}
-          </span>
-        </div>
-      </div>
-
-      {/* Bio */}
-      <div>
-        <h2 className="text-sky-400 text-lg mb-3 font-semibold">## About</h2>
-        <div className="leading-relaxed space-y-3">
-          {aboutMe.fullBio.split('\n\n').map((paragraph, i) => (
-            <p key={i}>{paragraph}</p>
-          ))}
-        </div>
-      </div>
-
-      {/* Journey */}
-      <div>
-        <h2 className="text-purple-400 text-lg mb-3 font-semibold">## My Journey</h2>
-        <div className="space-y-2">
-          <p>Born in Yemen <span className="text-gray-500">(0-3 years)</span></p>
-          <p>Grew up in Malaysia <span className="text-gray-500">(4-27 years)</span></p>
-          <p>Now in the Netherlands <span className="text-gray-500">(28+)</span></p>
-        </div>
-      </div>
-
-      {/* Quick Facts */}
-      <div>
-        <h2 className="text-pink-400 text-lg mb-3 font-semibold">## Quick Facts</h2>
-        <ul className="space-y-2 list-disc list-inside">
-          <li>Manchester United fan (GGMU!)</li>
-          <li>CR7 admirer (SIUUUU!)</li>
-          <li>Nasi Lemak enthusiast</li>
-          <li>Passionate gamer</li>
-          <li>Animation lover</li>
-        </ul>
-      </div>
-    </div>
-  );
-};
-
-const Layer2 = () => {
-  return (
-    <WindowProvider>
-      <Desktop />
-    </WindowProvider>
-  );
+const Layer2 = ({ onSwitch }) => {
+  return <Desktop onSwitch={onSwitch} />;
 };
 
 export default Layer2;

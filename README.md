@@ -10,8 +10,8 @@ A unique, personality-driven portfolio website featuring two distinct layers: an
 A visually stunning, personality-driven interface featuring:
 
 - 🎬 **Hero Section** - Animated gradient background with floating particles and custom typography
-- 🗺️ **Interactive Country Map** - SVG visualizations for Yemen, Malaysia, and Netherlands with hover effects
-- 🎵 **Spotify Music Widget** - Animated album art display (ready for API integration)
+- 🗺️ **Globe Travel Widget** - Cinematic night-earth canvas with live location callouts and story capsules
+- 🎵 **Spotify Music Widget** - Real track metadata + inline preview audio with automatic album art
 - 🚀 **Projects Showcase** - Featured projects with smooth hover effects
 - 🎮 **Easter Eggs**:
   - 🕹️ Konami Code (↑↑↓↓←→←→BA) triggers a CR7 SIUUUU celebration
@@ -84,11 +84,19 @@ npm run dev
 - 🎯 `npm run test:ui` - Run tests with Playwright UI
 - 👁️ `npm run test:headed` - Run tests in headed mode
 - 📊 `npm run test:report` - Show test report
+- 🧹 `npm run clean` - Remove build/test artifacts (`dist`, `playwright-report`, `test-results`, `.cache`, `.eslintcache`, logs) so the repo stays lean
+
+## 🧽 Workspace Cleanliness
+
+- Run `npm run clean` after a build/test session to remove generated directories before committing.
+- The script also deletes loose `*.log`, common tool caches (`.eslintcache`, `.cache`), and any stale report folders so git status stays focused on source changes.
 
 ## 📁 Project Structure
 
 ```
 my-portfolio/
+├── api/                      # Serverless endpoints (Vercel-style)
+│   └── spotify/track.js      # 🔁 Spotify metadata + preview proxy
 ├── src/
 │   ├── components/
 │   │   ├── shared/              # 🔗 Shared components across layers
@@ -123,6 +131,8 @@ my-portfolio/
 │   ├── App.jsx                  # 🏠 Main app with routing
 │   ├── index.css                # 🎨 Global styles
 │   └── main.jsx                 # 🚪 Entry point
+├── server/
+│   └── spotifyProxy.js       # ♻️ Shared proxy logic for dev + prod
 ├── public/                      # 📦 Static assets
 ├── dist/                        # 📦 Production build output
 └── package.json
@@ -144,6 +154,15 @@ Edit these files to personalize the portfolio:
 - 🎨 **Colors & Theme**: Edit Tailwind configuration in `tailwind.config.js`
 - ✨ **Custom Styles**: Add global styles in `src/index.css`
 - 🎬 **Animations**: Adjust Framer Motion parameters in component files
+
+### 🎵 Spotify Widget Setup
+
+1. Duplicate `.env.example` → `.env`.
+2. Set `VITE_SPOTIFY_TRACK_URL` to any Spotify track link (Share → Copy Song Link).
+3. (Optional) Set `VITE_SPOTIFY_PROXY_URL` if you deploy the proxy to a different domain. When hosting on Vercel, the bundled `api/spotify/track` function works automatically.
+4. The development server already exposes `/api/spotify/track`, powered by `server/spotifyProxy.js`, so no extra tooling is required locally.
+
+> The proxy fetches official artwork, artist data, and the MP3 preview directly from Spotify’s metadata, so your widget always reflects the real track.
 
 ## 🎮 Easter Eggs
 
@@ -189,7 +208,7 @@ All modern browsers with ES6+ support.
 
 ## 🔮 Future Enhancements
 
-- 🎵 **Spotify Integration**: Connect to Spotify API for real-time "Now Playing" data
+- 🎵 **Real-Time Now Playing**: Extend the proxy with personal tokens for live listening sessions
 - 📝 **Blog Section**: Add a developer blog or article section
 - 🎮 **More Easter Eggs**: Additional hidden features and interactions
 - 🤖 **AI Chatbot Upgrade**: Integrate with OpenAI API for dynamic conversations

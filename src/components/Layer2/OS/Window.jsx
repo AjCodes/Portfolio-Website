@@ -19,19 +19,6 @@ const Window = ({ id, title, children, icon, zIndex }) => {
             initial={{ scale: 0.8, opacity: 0, y: 100 }}
             animate={{
                 scale: 1,
-                opacity: 1,
-                y: 0,
-                width: isMaximized ? '100vw' : '800px',
-                height: isMaximized ? 'calc(100vh - 48px)' : '600px',
-                x: isMaximized ? 0 : undefined,
-                y: isMaximized ? 0 : undefined,
-                left: isMaximized ? 0 : undefined,
-                top: isMaximized ? 0 : undefined,
-            }}
-            exit={{ scale: 0.8, opacity: 0 }}
-            style={{
-                zIndex,
-                position: isMaximized ? 'fixed' : 'absolute',
             }}
             className={`
         ${isMaximized ? 'rounded-none' : 'rounded-lg'} 

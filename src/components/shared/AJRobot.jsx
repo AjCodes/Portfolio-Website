@@ -1,27 +1,9 @@
 import { motion } from 'framer-motion';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useContext } from 'react';
-import { LoadingContext } from '../../App';
 
-const AJRobot = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { setIsTransitioning } = useContext(LoadingContext);
-  const isLayer1 = location.pathname === '/';
-
+const AJRobot = ({ onSwitch, isLayer1 = true }) => {
   const handleClick = () => {
-    if (isLayer1) {
-      // Trigger loading screen for Layer1 -> Layer2 transition
-      setIsTransitioning(true);
-
-      // Wait for loading animation to complete (8 seconds)
-      setTimeout(() => {
-        navigate('/workspace');
-        setIsTransitioning(false);
-      }, 8000);
-    } else {
-      // Go back to Layer1 without loading screen
-      navigate('/');
+    if (onSwitch) {
+      onSwitch();
     }
   };
 
@@ -29,148 +11,130 @@ const AJRobot = () => {
     <motion.button
       onClick={handleClick}
       className="fixed bottom-8 right-8 z-50 group"
-      whileHover={{ scale: 1.1 }}
+      whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      animate={{
-        y: [0, -10, 0],
-      }}
-      transition={{
-        y: {
-          duration: 2,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }
-      }}
       title={isLayer1 ? "Enter Workspace" : "Back to Experience"}
     >
-      {/* Robot Container */}
-      <div className="relative bg-gradient-to-br from-purple-600 to-pink-600 p-4 rounded-2xl shadow-2xl">
-        {/* Glow effect */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity" />
+      {/* Portal Container */}
+      <div className="relative w-24 h-24">
+        {/* Outer glow rings */}
+        <motion.div
+          className="absolute inset-0 rounded-full border-2 border-primary/30"
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.5, 0, 0.5],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        <motion.div
+          className="absolute inset-0 rounded-full border-2 border-secondary/30"
+          animate={{
+            scale: [1, 1.5, 1],
+            opacity: [0.5, 0, 0.5],
+          }}
+          transition={{
+            duration: 2,
+            delay: 0.5,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
 
-        {/* Robot SVG */}
-        <svg
-          width="60"
-          height="60"
-          viewBox="0 0 120 120"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="relative z-10"
+        {/* Main Portal Circle */}
+        <motion.div
+          className="absolute inset-2 rounded-full bg-gradient-to-br from-primary via-purple-500 to-secondary shadow-2xl overflow-hidden"
+          animate={{
+            boxShadow: [
+              '0 0 20px rgba(59, 130, 246, 0.5)',
+              '0 0 40px rgba(168, 85, 247, 0.7)',
+              '0 0 20px rgba(59, 130, 246, 0.5)',
+            ],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
         >
-          {/* Antenna */}
-          <motion.circle
-            cx="60"
-            cy="15"
-            r="5"
-            fill="#fff"
+          {/* Swirling energy effect */}
+          <motion.div
+            className="absolute inset-0"
+            style={{
+              background: 'radial-gradient(circle at center, transparent 30%, rgba(255,255,255,0.1) 60%, transparent 100%)',
+            }}
             animate={{
-              scale: [1, 1.5, 1],
-              opacity: [1, 0.5, 1]
+              rotate: 360,
             }}
             transition={{
-              duration: 1,
-              repeat: Infinity
-            }}
-          />
-          <line x1="60" y1="20" x2="60" y2="30" stroke="#fff" strokeWidth="3" />
-
-          {/* Head */}
-          <rect x="35" y="30" width="50" height="40" rx="10" fill="#fff" />
-
-          {/* Eyes */}
-          <motion.circle
-            cx="47"
-            cy="45"
-            r="6"
-            fill="#8B5CF6"
-            animate={{
-              scaleY: [1, 0.1, 1]
-            }}
-            transition={{
-              duration: 3,
+              duration: 8,
               repeat: Infinity,
-              repeatDelay: 2
+              ease: "linear"
             }}
           />
-          <motion.circle
-            cx="73"
-            cy="45"
-            r="6"
-            fill="#8B5CF6"
+
+          {/* Inner portal rings */}
+          <motion.div
+            className="absolute inset-4 rounded-full border-2 border-white/30"
             animate={{
-              scaleY: [1, 0.1, 1]
+              scale: [0.8, 1.2, 0.8],
+              opacity: [0.3, 0.7, 0.3],
+              rotate: [0, 180, 360],
             }}
             transition={{
-              duration: 3,
+              duration: 4,
               repeat: Infinity,
-              repeatDelay: 2
+              ease: "easeInOut"
             }}
           />
-
-          {/* Smile */}
-          <motion.path
-            d="M 45 58 Q 60 68 75 58"
-            stroke="#8B5CF6"
-            strokeWidth="3"
-            fill="none"
-            strokeLinecap="round"
+          <motion.div
+            className="absolute inset-6 rounded-full border border-white/50"
             animate={{
-              d: [
-                "M 45 58 Q 60 68 75 58",
-                "M 45 58 Q 60 65 75 58",
-                "M 45 58 Q 60 68 75 58"
-              ]
+              scale: [1.2, 0.8, 1.2],
+              opacity: [0.7, 0.3, 0.7],
+              rotate: [360, 180, 0],
             }}
             transition={{
-              duration: 2,
-              repeat: Infinity
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut"
             }}
           />
 
-          {/* Body */}
-          <rect x="30" y="75" width="60" height="35" rx="8" fill="#fff" />
-
-          {/* Body Details */}
-          <circle cx="60" cy="92" r="4" fill="#8B5CF6" />
-
-          {/* Arms */}
-          <motion.rect
-            x="15"
-            y="80"
-            width="10"
-            height="25"
-            rx="5"
-            fill="#fff"
-            animate={{
-              rotate: isLayer1 ? [-15, 15, -15] : [15, -15, 15]
-            }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity
-            }}
-            style={{ transformOrigin: "50% 0%" }}
-          />
-          <motion.rect
-            x="95"
-            y="80"
-            width="10"
-            height="25"
-            rx="5"
-            fill="#fff"
-            animate={{
-              rotate: isLayer1 ? [15, -15, 15] : [-15, 15, -15]
-            }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity
-            }}
-            style={{ transformOrigin: "50% 0%" }}
-          />
-        </svg>
+          {/* Center Icon */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <motion.div
+              animate={{
+                scale: [1, 1.1, 1],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              {isLayer1 ? (
+                // Enter icon (arrow pointing inward)
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                </svg>
+              ) : (
+                // Exit icon (arrow pointing outward)
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 3H3v6M15 21h6v-6M3 3l7 7M21 21l-7-7" />
+                </svg>
+              )}
+            </motion.div>
+          </div>
+        </motion.div>
 
         {/* Tooltip */}
-        <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-3 py-1 rounded-lg text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-          {isLayer1 ? "→ Workspace" : "← Experience"}
+        <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-900/90 backdrop-blur-sm text-white px-4 py-2 rounded-lg text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-xl border border-white/10">
+          {isLayer1 ? "→ Enter Workspace" : "← Back to Experience"}
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900 border-r border-b border-white/10"></div>
         </div>
       </div>
     </motion.button>

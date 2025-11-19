@@ -4,7 +4,7 @@ const WindowContext = createContext();
 
 export const useWindow = () => useContext(WindowContext);
 
-export const WindowProvider = ({ children }) => {
+export const WindowManagerProvider = ({ children }) => {
     const [windows, setWindows] = useState([]);
     const [activeWindowId, setActiveWindowId] = useState(null);
     const [minimizedWindows, setMinimizedWindows] = useState([]);

@@ -1,70 +1,89 @@
-import Hero from '../components/Layer1/Hero';
-import AboutMe from '../components/Layer1/AboutMe';
-import Music from '../components/Layer1/Music';
-import Projects from '../components/Layer1/Projects';
-import EasterEggs from '../components/Layer1/EasterEggs';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import FloatingNavbar from '../components/Layer1/FloatingNavbar';
+import HomeView from '../components/Layer1/Views/HomeView';
+import AboutView from '../components/Layer1/Views/AboutView';
+import ProjectsView from '../components/Layer1/Views/ProjectsView';
+import CaseStudyView from '../components/Layer1/Views/CaseStudyView';
 import AJRobot from '../components/shared/AJRobot';
 import ThemeToggle from '../components/shared/ThemeToggle';
+import SeamlessBackground from '../components/shared/SeamlessBackground';
+import CustomCursor from '../components/shared/CustomCursor';
+import SpotifyPlayer from '../components/shared/SpotifyPlayer';
 
-const Layer1 = () => {
+const Layer1 = ({ onSwitch }) => {
+  const [activeView, setActiveView] = useState('home');
+
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Theme Toggle */}
+    <div className="relative h-screen w-screen overflow-hidden bg-[hsl(var(--color-bg))] text-[hsl(var(--color-text))] transition-colors duration-300">
+      <CustomCursor />
+      <SpotifyPlayer />
+      {/* Global Background */}
+      <SeamlessBackground />
+
+      {/* Floating Navbar */}
+      <FloatingNavbar activeView={activeView} setActiveView={setActiveView} />
+
+      {/* Main Content Area - Single Screen View Switcher */}
+      <main className="relative z-10 h-full w-full pt-20">
+        <AnimatePresence mode="wait">
+          {activeView === 'home' && (
+            <motion.div
+              key="home"
+              className="h-full w-full"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+            >
+              <HomeView setActiveView={setActiveView} />
+            </motion.div>
+          )}
+
+          {activeView === 'about' && (
+            <motion.div
+              key="about"
+              className="h-full w-full"
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -30 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+            >
+              <AboutView />
+            </motion.div>
+          )}
+
+          {activeView === 'projects' && (
+            <motion.div
+              key="projects"
+              className="h-full w-full"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -30 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+            >
+              <ProjectsView />
+            </motion.div>
+          )}
+
+          {activeView === 'casestudy' && (
+            <motion.div
+              key="casestudy"
+              className="h-full w-full"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.05 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+            >
+              <CaseStudyView />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </main>
+
+      {/* Shared Components */}
+      <AJRobot onSwitch={onSwitch} isLayer1={true} />
       <ThemeToggle />
-
-      {/* AJ Robot Navigation */}
-      <AJRobot />
-
-      {/* Easter Eggs */}
-      <EasterEggs />
-
-      {/* Hero Section */}
-      <Hero />
-
-      {/* About Me Section (includes Countries) */}
-      <AboutMe />
-
-      {/* Music Section */}
-      <Music />
-
-      {/* Projects Section */}
-      <Projects />
-
-      {/* Footer */}
-      <footer className="bg-gray-900 py-12 px-4">
-        <div className="max-w-6xl mx-auto text-center">
-          <p className="text-gray-400 mb-4">
-            Built with React, Framer Motion, and lots of ☕
-          </p>
-          <p className="text-gray-500 text-sm">
-            © 2025 AJ. All rights reserved.
-          </p>
-          <div className="mt-6 flex justify-center gap-6">
-            <a
-              href="https://github.com/AjCodes"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-400 hover:text-purple-400 transition-colors"
-            >
-              GitHub
-            </a>
-            <a
-              href="https://www.instagram.com/aboodmadridista/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-400 hover:text-purple-400 transition-colors"
-            >
-              Instagram
-            </a>
-            <a
-              href="mailto:ajabood7788@gmail.com"
-              className="text-gray-400 hover:text-purple-400 transition-colors"
-            >
-              Email
-            </a>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };

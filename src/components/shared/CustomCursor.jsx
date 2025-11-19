@@ -1,71 +1,63 @@
-import { motion } from 'framer-motion';
-import { useMousePosition } from '../../hooks/useMousePosition';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useTheme } from '../../hooks/useTheme';
 
 const CustomCursor = () => {
-  const { x, y } = useMousePosition();
-  const [isPointer, setIsPointer] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+  const { theme } = useTheme();
 
   useEffect(() => {
-    const handleMouseOver = (e) => {
-      const target = e.target;
-      const isClickable =
-        target.tagName === 'A' ||
-        target.tagName === 'BUTTON' ||
-        target.onclick ||
-        target.style.cursor === 'pointer' ||
-        target.closest('a') ||
-        target.closest('button');
-
-      setIsPointer(!!isClickable);
+    const handleMouseMove = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
     };
 
+    const handleMouseEnter = () => setIsHovering(true);
+    const handleMouseLeave = () => setIsHovering(false);
+
+    // Check for interactive elements
+    const handleMouseOver = (e) => {
+      const target = e.target;
+      if (
+        target.tagName === 'BUTTON' ||
+        target.tagName === 'A' ||
+        target.closest('button') ||
+        target.closest('a') ||
+        target.style.cursor === 'pointer'
+      ) {
+        setIsHovering(true);
+      } else {
+        setIsHovering(false);
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseover', handleMouseOver);
 
     return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseover', handleMouseOver);
     };
   }, []);
 
-  // Hide on mobile/touch devices
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
-
-  useEffect(() => {
-    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
-  }, []);
-
-  if (isTouchDevice) return null;
-
   return (
     <>
-      {/* Main cursor */}
-      <motion.div
-        className="fixed top-0 left-0 w-6 h-6 rounded-full bg-white mix-blend-difference pointer-events-none z-[9999]"
-        animate={{
-          x: x - 12,
-          y: y - 12,
-          scale: isPointer ? 1.5 : 1,
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 500,
-          damping: 28,
-          mass: 0.5
+      <div
+        className="custom-cursor"
+        style={{
+          left: `${mousePosition.x}px`,
+          top: `${mousePosition.y}px`,
+          transform: `translate(-50%, -50%) scale(${isHovering ? 1.5 : 1})`,
+          opacity: isHovering ? 0.8 : 1,
+          borderColor: `hsl(var(--color-primary))`,
         }}
       />
-
-      {/* Trailing cursor */}
-      <motion.div
-        className="fixed top-0 left-0 w-2 h-2 rounded-full bg-white/50 mix-blend-difference pointer-events-none z-[9998]"
-        animate={{
-          x: x - 4,
-          y: y - 4,
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 150,
-          damping: 15,
-          mass: 0.1
+      <div
+        className="custom-cursor-dot"
+        style={{
+          left: `${mousePosition.x}px`,
+          top: `${mousePosition.y}px`,
+          transform: 'translate(-50%, -50%)',
+          backgroundColor: `hsl(var(--color-primary))`,
         }}
       />
     </>
@@ -73,3 +65,5 @@ const CustomCursor = () => {
 };
 
 export default CustomCursor;
+
+
