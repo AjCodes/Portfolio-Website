@@ -176,6 +176,7 @@ const AboutView = () => {
                 initial={{ scale: 0.92, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.25 }}
+                onMouseLeave={() => setActiveLocation('netherlands')}
             >
                 <div className="absolute inset-0 rounded-[36px] overflow-hidden">
                     <div

@@ -19,15 +19,13 @@ const spotifyProxyPlugin = () => ({
         return
       }
       try {
-        const requestUrl = new URL(req.originalUrl || req.url, 'http://localhost')
-        const trackUrl = requestUrl.searchParams.get('trackUrl')
-        const data = await getTrackPayload(trackUrl)
-        res.setHeader('Content-Type', 'application/json; charset=utf-8')
-        res.end(JSON.stringify(data))
+        const data = await getTrackPayload();
+        res.setHeader('Content-Type', 'application/json; charset=utf-8');
+        res.end(JSON.stringify(data));
       } catch (error) {
-        console.error('[vite spotify proxy]', error)
-        res.statusCode = 500
-        res.end(JSON.stringify({ error: error.message || 'Spotify proxy failed' }))
+        console.error('[vite spotify proxy]', error);
+        res.statusCode = 500;
+        res.end(JSON.stringify({ error: error.message || 'Spotify proxy failed' }));
       }
     })
   }

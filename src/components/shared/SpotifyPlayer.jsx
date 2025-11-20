@@ -52,9 +52,9 @@ const SpotifyPlayer = () => {
         setAudioError(true);
 
         // If preview not available or blocked, open Spotify
-        if (currentTrack.url && isPlaying) {
+        if (currentTrack.trackUrl && isPlaying) {
           console.log('Opening Spotify link instead');
-          window.open(currentTrack.url, '_blank');
+          window.open(currentTrack.trackUrl, '_blank');
           togglePlay(); // Stop the "playing" state since we opened Spotify
         }
       }
@@ -91,30 +91,30 @@ const SpotifyPlayer = () => {
             className="bg-white/10 dark:bg-black/40 backdrop-blur-xl border border-primary/30 rounded-2xl p-4 shadow-2xl min-w-[300px]"
             onMouseLeave={() => setIsExpanded(false)}
           >
-              {/* Album Art */}
-              <div className="flex items-center gap-4 mb-3">
-                <motion.div
-                  className="w-16 h-16 rounded-lg overflow-hidden shadow-lg flex-shrink-0 relative"
-                  animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
-                  transition={{ duration: 20, repeat: isPlaying ? Infinity : 0, ease: 'linear' }}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <img
-                    src={currentTrack.image || 'https://via.placeholder.com/300'}
-                    alt={currentTrack.album}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.src = 'https://via.placeholder.com/300';
-                    }}
+            {/* Album Art */}
+            <div className="flex items-center gap-4 mb-3">
+              <motion.div
+                className="w-16 h-16 rounded-lg overflow-hidden shadow-lg flex-shrink-0 relative"
+                animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
+                transition={{ duration: 20, repeat: isPlaying ? Infinity : 0, ease: 'linear' }}
+                whileHover={{ scale: 1.05 }}
+              >
+                <img
+                  src={currentTrack.image || 'https://via.placeholder.com/300'}
+                  alt={currentTrack.album}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.src = 'https://via.placeholder.com/300';
+                  }}
+                />
+                {isPlaying && (
+                  <motion.div
+                    className="absolute inset-0 border-2 border-[#1DB954] rounded-lg"
+                    animate={{ opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 2, repeat: Infinity }}
                   />
-                  {isPlaying && (
-                    <motion.div
-                      className="absolute inset-0 border-2 border-[#1DB954] rounded-lg"
-                      animate={{ opacity: [0.5, 1, 0.5] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    />
-                  )}
-                </motion.div>
+                )}
+              </motion.div>
 
               {/* Track Info */}
               <div className="flex-1 min-w-0">
@@ -142,7 +142,7 @@ const SpotifyPlayer = () => {
               </div>
             </div>
 
-              {/* Controls */}
+            {/* Controls */}
             <div className="flex items-center justify-between">
               <motion.button
                 onClick={togglePlay}
@@ -162,7 +162,7 @@ const SpotifyPlayer = () => {
               </motion.button>
 
               <a
-                href={currentTrack.url}
+                href={currentTrack.trackUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs text-gray-300 dark:text-gray-400 hover:text-[#1DB954] transition-colors flex items-center gap-1"

@@ -17,22 +17,30 @@ const HomeView = ({ setActiveView }) => {
                     transition={{ duration: 0.6, delay: 0.1 }}
                 >
                     <span className="text-gradient-premium">
-                        Crafting Digital
-                        <br />
-                        Experiences
+                        Hey, I'm AJ
                     </span>
                 </motion.h1>
 
-                {/* Subtitle */}
+                {/* Tagline */}
                 <motion.p
-                    className="text-xl md:text-2xl lg:text-3xl mb-12 font-light text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed"
+                    className="text-3xl md:text-4xl lg:text-5xl mb-6 font-semibold text-primary/90 dark:text-primary leading-tight"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
+                    transition={{ duration: 0.6, delay: 0.25 }}
                 >
-                    Building innovative solutions with code, creativity, and passion.
+                    Ideas to Impact
+                </motion.p>
+
+                {/* Subtitle */}
+                <motion.p
+                    className="text-xl md:text-2xl lg:text-3xl mb-12 font-light text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                >
+                    Developer who crafts more than code
                     <br />
-                    Welcome to my digital playground.
+                    I build experiences people remember.
                 </motion.p>
 
                 {/* CTA Buttons */}

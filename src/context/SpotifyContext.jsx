@@ -2,14 +2,7 @@ import { useState, useEffect, createContext, useContext, useRef } from 'react';
 
 const SpotifyContext = createContext();
 
-const DEFAULT_TRACK_URL = (import.meta.env.VITE_SPOTIFY_TRACK_URL || 'https://open.spotify.com/track/1eyzqe2QqGZUmfcPZtrIyt').trim();
-const API_ENDPOINT = (import.meta.env.VITE_SPOTIFY_PROXY_URL || '/api/spotify/track').trim();
-
-const buildEndpoint = (trackUrl) => {
-    const normalizedBase = API_ENDPOINT.endsWith('/') ? API_ENDPOINT.slice(0, -1) : API_ENDPOINT;
-    const separator = normalizedBase.includes('?') ? '&' : '?';
-    return `${normalizedBase}${separator}trackUrl=${encodeURIComponent(trackUrl)}`;
-};
+const API_ENDPOINT = '/api/spotify/track';
 
 export const SpotifyProvider = ({ children }) => {
     const audioRef = useRef(null);
@@ -35,13 +28,20 @@ export const SpotifyProvider = ({ children }) => {
         setIsLoading(true);
         setError(null);
         try {
-            const response = await fetch(buildEndpoint(DEFAULT_TRACK_URL), {
+            const response = await fetch(API_ENDPOINT, {
                 headers: { 'Cache-Control': 'no-cache' }
             });
             if (!response.ok) {
                 throw new Error('Unable to reach the Spotify proxy endpoint.');
             }
             const payload = await response.json();
+            console.log('Spotify data received:', payload);
+
+            // Handle error responses
+            if (payload.error) {
+                throw new Error(payload.error);
+            }
+
             setCurrentTrack(payload);
             setProgress(0);
             setIsPlaying(false);
