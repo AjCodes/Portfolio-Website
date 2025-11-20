@@ -97,75 +97,95 @@ const AboutView = () => {
                 </motion.div>
 
                 <motion.div
-                    className="glass-card p-5 rounded-2xl border border-white/10 bg-[#121212] flex items-center gap-4 relative overflow-hidden group shadow-xl"
+                    className="glass-card p-6 rounded-2xl border border-white/10 bg-[#121212] relative overflow-hidden group shadow-xl"
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.35 }}
                 >
                     <div className="absolute inset-0 bg-gradient-to-r from-[#1DB954]/15 via-transparent to-transparent opacity-70 pointer-events-none" />
-                    <div className="relative w-20 h-20 rounded-2xl overflow-hidden shadow-lg shrink-0 border border-white/5">
-                        {isLoading ? (
-                            <div className="w-full h-full bg-gray-800 animate-pulse" />
-                        ) : (
-                            <img
-                                src={currentTrack?.image}
-                                alt={currentTrack?.name || 'Album artwork'}
-                                className={`w-full h-full object-cover transition-transform duration-700 ${isPlaying ? 'scale-110' : 'scale-100'}`}
-                            />
-                        )}
+
+                    {/* Header */}
+                    <div className="relative z-10 flex items-center gap-2 mb-4">
+                        <span className={`w-2.5 h-2.5 rounded-full ${isPlaying ? 'bg-[#1DB954] animate-pulse shadow-[0_0_12px_rgba(29,185,84,0.8)]' : 'bg-white/30'}`} />
+                        <p className="text-xs text-[#1DB954] font-bold uppercase tracking-[0.3em]">
+                            {isPlaying ? 'Currently Listening To' : 'Recently Played'}
+                        </p>
+                    </div>
+
+                    <div className="relative flex gap-5">
+                        {/* Album Art - BIGGER */}
+                        <div className="relative w-28 h-28 rounded-xl overflow-hidden shadow-2xl shrink-0 border-2 border-white/10">
+                            {isLoading ? (
+                                <div className="w-full h-full bg-gray-800 animate-pulse" />
+                            ) : (
+                                <img
+                                    src={currentTrack?.image}
+                                    alt={currentTrack?.name || 'Album artwork'}
+                                    className={`w-full h-full object-cover transition-transform duration-700 ${isPlaying ? 'scale-110 rotate-1' : 'scale-100'}`}
+                                />
+                            )}
+                            {/* Vinyl effect overlay */}
+                            {isPlaying && (
+                                <div className="absolute inset-0 bg-gradient-to-tr from-black/40 via-transparent to-white/20" />
+                            )}
+                        </div>
+
+                        {/* Track Info */}
+                        <div className="flex-1 min-w-0 relative z-10 flex flex-col justify-between">
+                            {error ? (
+                                <p className="text-sm text-red-400">{error}</p>
+                            ) : (
+                                <div className="space-y-1">
+                                    <p className="text-base font-bold text-white line-clamp-2 leading-tight">
+                                        {currentTrack?.name || (isLoading ? 'Fetching track...' : 'Track unavailable')}
+                                    </p>
+                                    <p className="text-sm text-gray-400 truncate">
+                                        {currentTrack?.artist || (!isLoading && 'Artist unknown')}
+                                    </p>
+                                    <p className="text-xs text-gray-500 truncate">
+                                        {currentTrack?.album}
+                                    </p>
+                                </div>
+                            )}
+
+                            {/* Progress Bar */}
+                            <div className="space-y-1.5">
+                                <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
+                                    <motion.div
+                                        className={`h-full ${isPlaying ? 'bg-[#1DB954]' : 'bg-white/30'}`}
+                                        animate={{ width: `${Math.min(progress, 1) * 100}%` }}
+                                        transition={{ type: 'spring', stiffness: 120, damping: 20 }}
+                                    />
+                                </div>
+                                <div className="flex items-center justify-between text-[10px] text-gray-400">
+                                    <span>{isPlaying && hasInlineAudio ? 'Preview playing' : 'Tap to listen'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Controls Row - COMPACT */}
+                    <div className="relative z-10 flex items-center justify-between mt-3 pt-3 border-t border-white/5">
                         <button
                             type="button"
                             onClick={hasInlineAudio ? togglePlay : openSpotify}
-                            className="absolute bottom-2 right-2 w-10 h-10 rounded-full bg-[#1DB954] text-black flex items-center justify-center shadow-lg hover:scale-105 transition-transform focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1DB954]"
+                            className="w-10 h-10 rounded-full bg-[#1DB954] hover:bg-[#1ed760] text-black flex items-center justify-center shadow-lg hover:scale-105 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1DB954]"
                             aria-label={isPlaying ? 'Pause Spotify preview' : 'Play Spotify preview'}
                         >
                             <PlayGlyph playing={isPlaying && hasInlineAudio} />
                         </button>
-                    </div>
-                    <div className="flex-1 min-w-0 relative z-10">
-                        <div className="flex items-center gap-2 mb-2">
-                            <span className={`w-2.5 h-2.5 rounded-full ${isPlaying ? 'bg-[#1DB954] animate-pulse shadow-[0_0_12px_rgba(29,185,84,0.8)]' : 'bg-white/30'}`} />
-                            <p className="text-[10px] text-[#1DB954] font-bold uppercase tracking-[0.45em]">
-                                {hasInlineAudio ? 'Live Preview' : 'Spotify'}
-                            </p>
-                        </div>
-                        {error ? (
-                            <p className="text-sm text-red-400">{error}</p>
-                        ) : (
-                            <>
-                                <p className="text-lg font-semibold text-white truncate">
-                                    {currentTrack?.name || (isLoading ? 'Fetching track...' : 'Track unavailable')}
-                                </p>
-                                <p className="text-sm text-gray-400 truncate">
-                                    {currentTrack?.artist || (!isLoading && 'Artist unknown')}
-                                </p>
-                            </>
-                        )}
-                        <div className="mt-4 space-y-1">
-                            <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
-                                <motion.div
-                                    className={`h-full ${isPlaying ? 'bg-[#1DB954]' : 'bg-white/30'}`}
-                                    animate={{ width: `${Math.min(progress, 1) * 100}%` }}
-                                    transition={{ type: 'spring', stiffness: 120, damping: 20 }}
-                                />
-                            </div>
-                            <div className="flex items-center justify-between text-[11px] text-gray-400">
-                                <span>{isPlaying && hasInlineAudio ? 'Preview playing' : 'Tap to listen'}</span>
-                                {currentTrack?.trackUrl && (
-                                    <button
-                                        type="button"
-                                        onClick={openSpotify}
-                                        className="text-[#1DB954] hover:text-white transition-colors font-semibold"
-                                    >
-                                        Open Spotify
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                        {!hasInlineAudio && !isLoading && (
-                            <p className="text-xs text-yellow-200/80 mt-2">
-                                Preview not available for this track. Open Spotify for the full experience.
-                            </p>
+
+                        {currentTrack?.trackUrl && (
+                            <button
+                                type="button"
+                                onClick={openSpotify}
+                                className="text-[11px] text-[#1DB954] hover:text-white transition-colors font-semibold flex items-center gap-1"
+                            >
+                                Open Spotify
+                                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02z" />
+                                </svg>
+                            </button>
                         )}
                     </div>
                 </motion.div>
@@ -222,6 +242,7 @@ const AboutView = () => {
                             key={place.id}
                             className="absolute z-20"
                             style={{ left: `${place.x}%`, top: `${place.y}%` }}
+                            onMouseLeave={() => setActiveLocation('netherlands')}
                         >
                             <motion.button
                                 type="button"
@@ -231,24 +252,26 @@ const AboutView = () => {
                                 aria-pressed={activeLocation === place.id}
                                 className="relative w-6 h-6 -ml-3 -mt-3"
                                 whileHover={{ scale: 1.15 }}
+                                transition={{ duration: 0.2 }}
                             >
                                 <span className="absolute inset-0 rounded-full bg-primary/30 blur-xl" />
-                                <span className={`absolute inset-1 rounded-full border-2 ${activeLocation === place.id ? 'border-[#1DB954]' : 'border-white/70'}`} />
-                                <span className={`absolute inset-0 rounded-full ${activeLocation === place.id ? 'bg-[#1DB954]' : 'bg-white'}`} />
+                                <span className={`absolute inset-1 rounded-full border-2 transition-colors duration-300 ${activeLocation === place.id ? 'border-[#1DB954]' : 'border-white/70'}`} />
+                                <span className={`absolute inset-0 rounded-full transition-all duration-300 ${activeLocation === place.id ? 'bg-[#1DB954] scale-100' : 'bg-white scale-75'}`} />
                             </motion.button>
 
                             <AnimatePresence>
                                 {activeLocation === place.id && (
                                     <motion.div
-                                        initial={{ opacity: 0, y: 6 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: 6 }}
-                                        transition={{ duration: 0.25 }}
-                                        className="absolute px-3 py-2 rounded-xl bg-black/80 backdrop-blur-md border border-white/10 shadow-lg"
-                                        style={{ transform: getLabelTransform(place.x) }}
+                                        initial={{ opacity: 0, scale: 0.9, y: -8 }}
+                                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                                        exit={{ opacity: 0, scale: 0.9, y: -8 }}
+                                        transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+                                        className="absolute top-8 left-1/2 -translate-x-1/2 px-3 py-2 rounded-xl bg-black/90 backdrop-blur-md border border-white/20 shadow-2xl min-w-[140px] max-w-[180px] pointer-events-none"
                                     >
-                                        <p className="text-xs font-semibold text-white">{place.name}</p>
-                                        <p className="text-[10px] text-gray-400">{place.description}</p>
+                                        <p className="text-xs font-bold text-white whitespace-nowrap">{place.name}</p>
+                                        <p className="text-[10px] text-gray-400 mt-0.5 leading-tight">{place.description}</p>
+                                        {/* Arrow pointing to dot */}
+                                        <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-black/90 border-l border-t border-white/20 rotate-45" />
                                     </motion.div>
                                 )}
                             </AnimatePresence>
@@ -260,7 +283,7 @@ const AboutView = () => {
                     </div>
                 </div>
             </motion.div>
-        </div>
+        </div >
     );
 };
 

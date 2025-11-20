@@ -17,7 +17,7 @@ const Layer1 = ({ onSwitch }) => {
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-[hsl(var(--color-bg))] text-[hsl(var(--color-text))] transition-colors duration-300">
       <CustomCursor />
-      <SpotifyPlayer />
+      <SpotifyPlayer activeView={activeView} />
       {/* Global Background */}
       <SeamlessBackground />
 

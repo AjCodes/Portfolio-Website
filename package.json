@@ -16,6 +16,7 @@
     "get-token": "node scripts/get-refresh-token.js"
   },
   "dependencies": {
+    "dotenv": "^17.2.3",
     "framer-motion": "^12.23.24",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"

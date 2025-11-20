@@ -15,18 +15,19 @@ const SeamlessBackground = () => {
         // Theme Colors - responsive to theme
         const isDark = theme === 'dark';
         const bgColor = isDark ? 'hsl(240, 15%, 8%)' : 'hsl(0, 0%, 98%)';
-        const particleColor = isDark 
+        const particleColor = isDark
             ? 'rgba(100, 200, 255, 0.5)' // Bright cyan for dark
             : 'rgba(255, 100, 50, 0.6)'; // Orange for light
-        const connectionColor = isDark 
-            ? 'rgba(255, 255, 255, 0.12)' 
+        const connectionColor = isDark
+            ? 'rgba(255, 255, 255, 0.12)'
             : 'rgba(0, 0, 0, 0.08)';
 
-        // Configuration - modern particle system
-        const particleCount = 120;
-        const connectionDistance = 140;
-        const mouseRadius = 180;
-        const repulsionForce = 0.6;
+        // Configuration - modern particle system (enhanced)
+        const particleCount = 180; // Increased from 120
+        const connectionDistance = 180; // Increased from 140
+        const mouseRadius = 220; // Increased from 180
+        const repulsionForce = 0.8; // Increased from 0.6
+        const attractionForce = 0.3; // New: particles slightly attract to each other
 
         // Initialize particles
         const init = () => {
@@ -43,21 +44,26 @@ const SeamlessBackground = () => {
                     vy: (Math.random() - 0.5) * 0.15,
                     baseX: Math.random() * canvas.width,
                     baseY: Math.random() * canvas.height,
-                    fontSize: Math.random() * 3 + 5, // 5-8px font size for "AJ"
-                    opacity: Math.random() * 0.3 + 0.15,
+                    fontSize: Math.random() * 4 + 6, // 6-10px - subtle but readable on focus
+                    opacity: Math.random() * 0.2 + 0.25, // 0.25-0.45 - subtle easter egg
                     pulse: Math.random() * Math.PI * 2,
                 });
             }
         };
 
-        // Draw particle with "AJ" text (small, like dots)
+        // Draw particle with "AJ" text (bolder and more visible)
         const drawParticle = (x, y, opacity, fontSize) => {
             ctx.save();
             ctx.globalAlpha = opacity;
             ctx.fillStyle = particleColor;
-            ctx.font = `600 ${fontSize.toFixed(1)}px 'Inter', sans-serif`;
+            ctx.font = `900 ${fontSize.toFixed(1)}px 'Inter', sans-serif`; // Changed from 600 to 900
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
+
+            // Add subtle shadow for depth (keeps same color)
+            ctx.shadowBlur = 2;
+            ctx.shadowColor = particleColor;
+
             ctx.fillText('AJ', x, y);
             ctx.restore();
         };
@@ -83,6 +89,21 @@ const SeamlessBackground = () => {
                     p.vx -= pushX;
                     p.vy -= pushY;
                 }
+
+                // Particle-to-particle attraction (subtle cohesion)
+                particles.forEach((p2, j) => {
+                    if (i !== j) {
+                        const dx2 = p2.x - p.x;
+                        const dy2 = p2.y - p.y;
+                        const dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+
+                        if (dist2 < connectionDistance && dist2 > 0) {
+                            const force = attractionForce / (dist2 * dist2);
+                            p.vx += (dx2 / dist2) * force;
+                            p.vy += (dy2 / dist2) * force;
+                        }
+                    }
+                });
 
                 // Spring back to base position
                 const springX = (p.baseX - p.x) * 0.008;
@@ -114,7 +135,7 @@ const SeamlessBackground = () => {
                 drawParticle(p.x, p.y, pulseOpacity, p.fontSize);
             });
 
-            // Draw connections between nearby particles
+            // Draw connections between nearby particles (enhanced)
             particles.forEach((p1, i) => {
                 particles.slice(i + 1).forEach(p2 => {
                     const dx = p1.x - p2.x;
@@ -122,14 +143,16 @@ const SeamlessBackground = () => {
                     const distance = Math.sqrt(dx * dx + dy * dy);
 
                     if (distance < connectionDistance) {
-                        const opacity = (1 - (distance / connectionDistance)) * 0.35;
+                        const opacity = (1 - (distance / connectionDistance)) * 0.5; // Increased from 0.35
+                        const lineWidth = (1 - (distance / connectionDistance)) * 1.2; // Dynamic width
+
                         ctx.beginPath();
                         ctx.moveTo(p1.x, p1.y);
                         ctx.lineTo(p2.x, p2.y);
-                        ctx.strokeStyle = isDark 
-                            ? `rgba(255, 255, 255, ${opacity})`
-                            : `rgba(0, 0, 0, ${opacity})`;
-                        ctx.lineWidth = 0.5;
+                        ctx.strokeStyle = isDark
+                            ? `rgba(100, 200, 255, ${opacity})` // Blue-ish connections in dark mode
+                            : `rgba(255, 100, 50, ${opacity})`; // Orange-ish in light mode
+                        ctx.lineWidth = lineWidth;
                         ctx.stroke();
                     }
                 });
