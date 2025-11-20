@@ -1,3 +1,8 @@
+// Import project images
+import smartRoadsImg from '../assets/projects/smart-roads.png';
+import focusupImg from '../assets/projects/focusup.png';
+import portfolioImg from '../assets/projects/portfolio.png';
+
 export const projects = [
   {
     id: 'smart-roads',
@@ -9,7 +14,7 @@ export const projects = [
     category: 'IoT & AI',
     year: '2024',
     featured: true,
-    image: '/src/assets/projects/smart-roads.png',
+    image: smartRoadsImg,
     links: {
       github: 'https://github.com/AjCodes/Smart-Roads',
       live: null
@@ -33,7 +38,7 @@ export const projects = [
     category: 'Mobile App',
     year: '2024',
     featured: true,
-    image: '/src/assets/projects/focusup.png',
+    image: focusupImg,
     links: {
       github: 'https://github.com/AjCodes/FocusUp',
       live: null
@@ -57,7 +62,7 @@ export const projects = [
     category: 'Web Development',
     year: '2025',
     featured: true,
-    image: '/src/assets/projects/portfolio.png',
+    image: portfolioImg,
     links: {
       github: 'https://github.com/AjCodes/Portfolio-Website',
       live: null

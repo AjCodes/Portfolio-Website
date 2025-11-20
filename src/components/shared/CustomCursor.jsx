@@ -1,20 +1,15 @@
 import { useEffect, useState } from 'react';
-import { useTheme } from '../../hooks/useTheme';
+import { motion } from 'framer-motion';
 
 const CustomCursor = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
-  const { theme } = useTheme();
 
   useEffect(() => {
     const handleMouseMove = (e) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
 
-    const handleMouseEnter = () => setIsHovering(true);
-    const handleMouseLeave = () => setIsHovering(false);
-
-    // Check for interactive elements
     const handleMouseOver = (e) => {
       const target = e.target;
       if (
@@ -41,23 +36,35 @@ const CustomCursor = () => {
 
   return (
     <>
-      <div
-        className="custom-cursor"
-        style={{
-          left: `${mousePosition.x}px`,
-          top: `${mousePosition.y}px`,
-          transform: `translate(-50%, -50%) scale(${isHovering ? 1.5 : 1})`,
-          opacity: isHovering ? 0.8 : 1,
-          borderColor: `hsl(var(--color-primary))`,
+      {/* Outer ring - follows with delay */}
+      <motion.div
+        className="fixed top-0 left-0 w-7 h-7 border-2 border-primary rounded-full pointer-events-none z-[9999] mix-blend-difference"
+        animate={{
+          x: mousePosition.x - 14,
+          y: mousePosition.y - 14,
+          scale: isHovering ? 1.5 : 1,
+          opacity: isHovering ? 0.5 : 1,
+        }}
+        transition={{
+          type: 'spring',
+          stiffness: 150,
+          damping: 15,
+          mass: 0.5,
         }}
       />
-      <div
-        className="custom-cursor-dot"
-        style={{
-          left: `${mousePosition.x}px`,
-          top: `${mousePosition.y}px`,
-          transform: 'translate(-50%, -50%)',
-          backgroundColor: `hsl(var(--color-primary))`,
+
+      {/* Inner dot - follows directly */}
+      <motion.div
+        className="fixed top-0 left-0 w-1.5 h-1.5 bg-primary rounded-full pointer-events-none z-[9999] mix-blend-difference"
+        animate={{
+          x: mousePosition.x - 3,
+          y: mousePosition.y - 3,
+          scale: isHovering ? 0 : 1,
+        }}
+        transition={{
+          type: 'spring',
+          stiffness: 500,
+          damping: 28,
         }}
       />
     </>
@@ -65,5 +72,3 @@ const CustomCursor = () => {
 };
 
 export default CustomCursor;
-
-

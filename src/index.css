@@ -7,22 +7,34 @@
 @layer base {
   :root {
     /* Light Theme - Orange/Cool Palette */
-    --color-primary: 15 85% 55%;        /* Warm Orange */
-    --color-secondary: 200 75% 60%;     /* Cool Blue */
-    --color-accent: 280 65% 65%;        /* Cool Purple */
-    --color-bg: 0 0% 98%;               /* Off-white */
-    --color-surface: 0 0% 95%;          /* Light Surface */
-    --color-text: 240 10% 10%;          /* Dark Text */
+    --color-primary: 15 85% 55%;
+    /* Warm Orange */
+    --color-secondary: 200 75% 60%;
+    /* Cool Blue */
+    --color-accent: 280 65% 65%;
+    /* Cool Purple */
+    --color-bg: 0 0% 98%;
+    /* Off-white */
+    --color-surface: 0 0% 95%;
+    /* Light Surface */
+    --color-text: 240 10% 10%;
+    /* Dark Text */
   }
 
   .dark {
     /* Dark Theme - Deep Blues/Purples */
-    --color-primary: 200 75% 65%;       /* Bright Cyan */
-    --color-secondary: 280 65% 70%;     /* Bright Purple */
-    --color-accent: 320 70% 70%;        /* Pink Accent */
-    --color-bg: 240 15% 8%;             /* Deep Dark */
-    --color-surface: 240 10% 12%;       /* Dark Surface */
-    --color-text: 0 0% 95%;             /* Light Text */
+    --color-primary: 200 75% 65%;
+    /* Bright Cyan */
+    --color-secondary: 280 65% 70%;
+    /* Bright Purple */
+    --color-accent: 320 70% 70%;
+    /* Pink Accent */
+    --color-bg: 240 15% 8%;
+    /* Deep Dark */
+    --color-surface: 240 10% 12%;
+    /* Dark Surface */
+    --color-text: 0 0% 95%;
+    /* Light Text */
   }
 
   * {
@@ -50,31 +62,6 @@
     cursor: none;
   }
 
-  /* Custom Cursor Element */
-  .custom-cursor {
-    position: fixed;
-    width: 20px;
-    height: 20px;
-    border: 2px solid hsl(var(--color-primary));
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    mix-blend-mode: difference;
-    transition: transform 0.1s ease;
-  }
-
-  .custom-cursor-dot {
-    position: fixed;
-    width: 4px;
-    height: 4px;
-    background-color: hsl(var(--color-primary));
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    mix-blend-mode: difference;
-    transition: transform 0.05s ease;
-  }
-
   /* Enhanced Custom scrollbar */
   ::-webkit-scrollbar {
     width: 10px;
@@ -86,26 +73,25 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, 
-      hsl(var(--color-primary)) 0%, 
-      hsl(var(--color-secondary)) 50%,
-      hsl(var(--color-accent)) 100%
-    );
+    background: linear-gradient(180deg,
+        hsl(var(--color-primary)) 0%,
+        hsl(var(--color-secondary)) 50%,
+        hsl(var(--color-accent)) 100%);
     border-radius: 10px;
     transition: all 0.3s ease;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, 
-      hsl(var(--color-primary) / 0.8) 0%, 
-      hsl(var(--color-secondary) / 0.8) 50%,
-      hsl(var(--color-accent) / 0.8) 100%
-    );
+    background: linear-gradient(180deg,
+        hsl(var(--color-primary) / 0.8) 0%,
+        hsl(var(--color-secondary) / 0.8) 50%,
+        hsl(var(--color-accent) / 0.8) 100%);
     box-shadow: 0 0 10px hsl(var(--color-primary) / 0.5);
   }
 }
 
 @layer components {
+
   /* Glassmorphism Card */
   .glass-card {
     background: rgba(255, 255, 255, 0.05);
@@ -133,20 +119,18 @@
 
   /* Premium Gradient Text */
   .gradient-text-primary {
-    background: linear-gradient(135deg, 
-      hsl(var(--color-primary)) 0%, 
-      hsl(var(--color-secondary)) 100%
-    );
+    background: linear-gradient(135deg,
+        hsl(var(--color-primary)) 0%,
+        hsl(var(--color-secondary)) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
   .gradient-text-accent {
-    background: linear-gradient(135deg, 
-      hsl(var(--color-secondary)) 0%, 
-      hsl(var(--color-accent)) 100%
-    );
+    background: linear-gradient(135deg,
+        hsl(var(--color-secondary)) 0%,
+        hsl(var(--color-accent)) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -154,24 +138,23 @@
 }
 
 @layer utilities {
+
   /* Text Gradients */
   .text-gradient {
     background: linear-gradient(135deg,
-      hsl(var(--color-primary)) 0%,
-      hsl(var(--color-secondary)) 50%,
-      hsl(var(--color-accent)) 100%
-    );
+        hsl(var(--color-primary)) 0%,
+        hsl(var(--color-secondary)) 50%,
+        hsl(var(--color-accent)) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
   .text-gradient-premium {
-    background: linear-gradient(135deg, 
-      hsl(var(--color-primary)) 0%,
-      hsl(var(--color-secondary)) 50%,
-      hsl(var(--color-accent)) 100%
-    );
+    background: linear-gradient(135deg,
+        hsl(var(--color-primary)) 0%,
+        hsl(var(--color-secondary)) 50%,
+        hsl(var(--color-accent)) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -182,14 +165,13 @@
   /* Background Gradients */
   .gradient-bg {
     background: linear-gradient(135deg,
-      hsl(var(--color-primary) / 0.1) 0%,
-      hsl(var(--color-secondary) / 0.1) 50%,
-      hsl(var(--color-accent) / 0.1) 100%
-    );
+        hsl(var(--color-primary) / 0.1) 0%,
+        hsl(var(--color-secondary) / 0.1) 50%,
+        hsl(var(--color-accent) / 0.1) 100%);
   }
 
   .gradient-mesh {
-    background: 
+    background:
       radial-gradient(at 0% 0%, hsl(var(--color-primary) / 0.2) 0px, transparent 50%),
       radial-gradient(at 100% 0%, hsl(var(--color-secondary) / 0.2) 0px, transparent 50%),
       radial-gradient(at 100% 100%, hsl(var(--color-accent) / 0.2) 0px, transparent 50%),
@@ -199,34 +181,43 @@
   /* Glow Effects */
   .glow-primary {
     box-shadow: 0 0 20px hsl(var(--color-primary) / 0.3),
-                0 0 40px hsl(var(--color-primary) / 0.2);
+      0 0 40px hsl(var(--color-primary) / 0.2);
   }
 }
 
 /* Advanced Animations */
 @keyframes gradient-shift {
-  0%, 100% {
+
+  0%,
+  100% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
 }
 
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-20px);
   }
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
     filter: brightness(1);
   }
+
   50% {
     opacity: 0.8;
     filter: brightness(1.2);
