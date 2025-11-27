@@ -5,6 +5,7 @@ import { AnimatePresence } from 'framer-motion';
 import { WindowManagerProvider } from './context/WindowManagerContext';
 import { SpotifyProvider } from './context/SpotifyContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { SpeedInsights } from "@vercel/speed-insights/react"
 
 // Create context for loading state
 export const LoadingContext = createContext();
@@ -27,6 +28,7 @@ function App() {
           </div>
         </SpotifyProvider>
       </ThemeProvider>
+      <SpeedInsights />
     </WindowManagerProvider>
   );
 }
