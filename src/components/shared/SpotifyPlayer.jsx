@@ -43,17 +43,14 @@ const SpotifyPlayer = ({ activeView }) => {
 
           // Try to play
           await audio.play();
-          console.log('✅ Audio playing successfully');
         } else {
           audio.pause();
         }
       } catch (err) {
-        console.error('❌ Audio playback error:', err);
         setAudioError(true);
 
         // If preview not available or blocked, open Spotify
         if (currentTrack.trackUrl && isPlaying) {
-          console.log('Opening Spotify link instead');
           window.open(currentTrack.trackUrl, '_blank');
           togglePlay(); // Stop the "playing" state since we opened Spotify
         }
@@ -149,6 +146,8 @@ const SpotifyPlayer = ({ activeView }) => {
                 className="w-12 h-12 rounded-full bg-[#1DB954] hover:bg-[#1ed760] text-white flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 group/play"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
+                aria-label={isPlaying ? "Pause track" : "Play track"}
+                title={isPlaying ? "Pause" : "Play"}
               >
                 {isPlaying ? (
                   <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -179,19 +178,12 @@ const SpotifyPlayer = ({ activeView }) => {
               ref={audioRef}
               preload="auto"
               crossOrigin="anonymous"
-              onError={(e) => {
-                console.error('❌ Audio element error:', e);
+              onError={() => {
                 setAudioError(true);
               }}
               onEnded={() => {
                 setProgress(0);
                 togglePlay();
-              }}
-              onLoadedData={() => {
-                console.log('✅ Audio loaded successfully');
-              }}
-              onPlay={() => {
-                console.log('🎵 Audio started playing');
               }}
             />
 

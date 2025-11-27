@@ -10,6 +10,7 @@ const ThemeToggle = () => {
       className="fixed top-4 right-4 z-40 p-3 rounded-full bg-white/10 dark:bg-white/5 backdrop-blur-md border border-primary/30 dark:border-primary/30 hover:border-primary dark:hover:border-primary transition-all duration-300"
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
+      aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
       title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
     >
       <motion.div

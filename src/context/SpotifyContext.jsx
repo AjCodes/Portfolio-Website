@@ -35,7 +35,6 @@ export const SpotifyProvider = ({ children }) => {
                 throw new Error('Unable to reach the Spotify proxy endpoint.');
             }
             const payload = await response.json();
-            console.log('Spotify data received:', payload);
 
             // Handle error responses
             if (payload.error) {
@@ -53,7 +52,6 @@ export const SpotifyProvider = ({ children }) => {
                 audioRef.current.currentTime = 0;
             }
         } catch (err) {
-            console.error('Spotify fetch error', err);
             setError(err.message || 'Unable to load Spotify data right now.');
         } finally {
             setIsLoading(false);

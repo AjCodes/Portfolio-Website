@@ -13,6 +13,7 @@ const AJRobot = ({ onSwitch, isLayer1 = true }) => {
       className="fixed bottom-8 right-8 z-50 group"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
+      aria-label={isLayer1 ? "Enter Workspace" : "Back to Experience"}
       title={isLayer1 ? "Enter Workspace" : "Back to Experience"}
     >
       {/* Portal Container */}

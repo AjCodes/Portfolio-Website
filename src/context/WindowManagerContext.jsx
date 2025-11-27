@@ -23,7 +23,7 @@ export const WindowManagerProvider = ({ children }) => {
             title,
             component,
             icon,
-            zIndex: windows.length + 1,
+            zIndex: 100 + windows.length,
         };
 
         setWindows([...windows, newWindow]);
@@ -50,8 +50,8 @@ export const WindowManagerProvider = ({ children }) => {
 
     const focusWindow = (id) => {
         setActiveWindowId(id);
-        // Bring to front logic could be added here by updating zIndex
-        const maxZ = Math.max(...windows.map((w) => w.zIndex), 0);
+        // Bring to front logic - ensure windows stay above z-100
+        const maxZ = Math.max(...windows.map((w) => w.zIndex), 99);
         setWindows(
             windows.map((w) =>
                 w.id === id ? { ...w, zIndex: maxZ + 1 } : w

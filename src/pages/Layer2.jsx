@@ -130,7 +130,8 @@ const Desktop = ({ onSwitch }) => {
     };
 
     bootSequence();
-  }, [openWindow]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (isBooting) {
     return (
@@ -206,8 +207,15 @@ const Desktop = ({ onSwitch }) => {
   );
 };
 
+import CustomCursor from '../components/shared/CustomCursor';
+
 const Layer2 = ({ onSwitch }) => {
-  return <Desktop onSwitch={onSwitch} />;
+  return (
+    <>
+      <CustomCursor />
+      <Desktop onSwitch={onSwitch} />
+    </>
+  );
 };
 
 export default Layer2;
