@@ -5,9 +5,10 @@ import HomeView from '../components/Layer1/Views/HomeView';
 import AboutView from '../components/Layer1/Views/AboutView';
 import ProjectsView from '../components/Layer1/Views/ProjectsView';
 import CaseStudyView from '../components/Layer1/Views/CaseStudyView';
-import SpotifyPlayer from '../components/shared/SpotifyPlayer';
+import WavePlayer from '../components/shared/WavePlayer';
 import DotGrid from '../components/shared/DotGrid';
 import LocationTime from '../components/shared/LocationTime';
+import CustomCursor from '../components/shared/CustomCursor';
 
 // Layer1 - Main portfolio page with different views
 const Layer1 = () => {
@@ -34,11 +35,14 @@ const Layer1 = () => {
       {/* Location and Time Widget - bottom right corner */}
       <LocationTime />
 
-      {/* Spotify music player widget */}
-      <SpotifyPlayer activeView={activeView} />
+      {/* Wave Music Player (Top Right) */}
+      <WavePlayer />
 
       {/* Navigation bar at the top */}
       <FloatingNavbar activeView={activeView} setActiveView={setActiveView} />
+
+      {/* Custom Cursor with trail */}
+      <CustomCursor />
 
       {/* Main content - switches between views with animations */}
       <main className="relative z-10 h-full w-full pt-20">

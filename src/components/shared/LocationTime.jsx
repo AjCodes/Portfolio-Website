@@ -23,7 +23,8 @@ const LocationTime = () => {
     }, []);
 
     return (
-        <div className="fixed bottom-6 right-6 z-50 font-mono text-xs pointer-events-none select-none">
+        <div className="fixed bottom-6 right-6 z-50 font-mono text-xs pointer-events-none select-none flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
             <span className="text-white/60 tracking-widest">{time} local time</span>
         </div>
     );

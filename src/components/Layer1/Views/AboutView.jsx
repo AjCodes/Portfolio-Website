@@ -1,6 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMemo, useState } from 'react';
-import { useSpotify } from '../../../context/SpotifyContext';
 
 // Locations for the world map
 const locations = [
@@ -21,7 +20,7 @@ const locations = [
         x: 78,
         y: 58,
         headline: 'Growth Phase',
-        timeline: '4 – 18 yrs',
+        timeline: '5 – 27 yrs',
         description: 'Where i grew up and became who i am.',
         details: 'Where i grew up and became who i am.',
         coordinates: '3.1°N / 101.7°E'
@@ -30,9 +29,9 @@ const locations = [
         id: 'netherlands',
         name: 'Netherlands',
         x: 49,
-        y: 28,
+        y: 36,
         headline: 'Current Base',
-        timeline: '2018 – Present',
+        timeline: '28 yrs – Present',
         description: "Where i'm putting it all together.",
         details: "Where i'm putting it all together.",
         coordinates: '52.4°N / 4.9°E'
@@ -43,42 +42,26 @@ const locations = [
 const journeyPath = [
     { x: 61, y: 55 },  // Yemen
     { x: 78, y: 58 },  // Malaysia
-    { x: 49, y: 28 }   // Netherlands
+    { x: 49, y: 36 }   // Netherlands
 ];
 
 const mapImage = 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop';
 
-const PlayGlyph = ({ playing }) => (
-    <svg viewBox="0 0 14 14" width="16" height="16" fill="currentColor" aria-hidden="true">
-        {playing ? (
-            <>
-                <rect x="2" y="2" width="3" height="10" rx="1" />
-                <rect x="9" y="2" width="3" height="10" rx="1" />
-            </>
-        ) : (
-            <path d="M3 2.5L11.5 7 3 11.5V2.5Z" />
-        )}
-    </svg>
-);
+
 
 const AboutView = () => {
     // null = no location selected (only show on hover)
     const [activeLocation, setActiveLocation] = useState(null);
-    const { isPlaying, togglePlay, currentTrack, isLoading, progress, error, hasInlineAudio } = useSpotify();
 
     const activePlace = useMemo(
         () => locations.find(place => place.id === activeLocation),
         [activeLocation]
     );
 
-    const openSpotify = () => {
-        if (currentTrack?.trackUrl) {
-            window.open(currentTrack.trackUrl, '_blank', 'noopener,noreferrer');
-        }
-    };
+
 
     return (
-        <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-4 px-6 pt-14 pb-4 max-w-7xl mx-auto relative z-20">
+        <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-3 px-6 pt-10 pb-4 max-w-7xl mx-auto relative z-20">
 
             {/* Left Column - About Text + Spotify + Socials */}
             <div className="md:col-span-5 flex flex-col gap-3">
@@ -89,7 +72,16 @@ const AboutView = () => {
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.15 }}
                 >
-                    <h2 className="text-2xl md:text-3xl font-bold mb-3 text-gradient-premium leading-tight">I build things that stick with people.</h2>
+                    <div className="flex justify-between items-start mb-3">
+                        <h2 className="text-2xl md:text-3xl font-bold text-gradient-premium leading-tight">I build things that stick with people.</h2>
+                        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md shrink-0">
+                            <span className="relative flex h-2 w-2">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                            </span>
+                            <span className="text-[10px] font-medium text-gray-300 tracking-wide uppercase hidden md:block">Available for work</span>
+                        </div>
+                    </div>
                     <div className="space-y-2 text-gray-300 leading-relaxed text-sm">
                         <p>
                             i've always been drawn to mixing ideas from different worlds. psychology, design, tech, whatever it takes to make something feel right. i don't like tunnel vision. when there's a problem in front of me, i need to see it from every angle before i can move forward.
@@ -109,37 +101,9 @@ const AboutView = () => {
                     </div>
                 </motion.div>
 
-                {/* Spotify Card - Bigger */}
-                <motion.div
-                    className="glass-card p-4 rounded-[20px] border border-white/10 bg-[#121212] relative overflow-hidden"
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.25 }}
-                >
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#1DB954]/10 via-transparent to-transparent opacity-50 pointer-events-none" />
-                    <div className="relative flex items-center gap-4">
-                        <div className="relative w-14 h-14 rounded-xl overflow-hidden shadow-lg shrink-0 border border-white/10">
-                            {isLoading ? <div className="w-full h-full bg-gray-800 animate-pulse" /> : (
-                                <img src={currentTrack?.image} alt={currentTrack?.name || 'Album'} className={`w-full h-full object-cover ${isPlaying ? 'animate-spin-slow' : ''}`} />
-                            )}
-                            <div className="absolute inset-0 flex items-center justify-center"><div className="w-2 h-2 bg-[#121212] rounded-full border border-white/10" /></div>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-1.5 mb-1">
-                                <span className={`w-2 h-2 rounded-full ${isPlaying ? 'bg-[#1DB954] animate-pulse' : 'bg-white/30'}`} />
-                                <p className="text-[9px] text-[#1DB954] font-bold uppercase tracking-widest">{isPlaying ? 'Now Playing' : 'Recently Played'}</p>
-                            </div>
-                            <p className="text-base font-bold text-white line-clamp-1">{currentTrack?.name || 'Fetching...'}</p>
-                            <p className="text-sm text-gray-400 line-clamp-1">{currentTrack?.artist || 'Unknown Artist'}</p>
-                        </div>
-                        <button onClick={hasInlineAudio ? togglePlay : openSpotify} className="px-4 py-2 rounded-full bg-[#1DB954] text-black text-sm font-bold hover:bg-[#1ed760] transition-colors flex items-center gap-1.5">
-                            <PlayGlyph playing={isPlaying && hasInlineAudio} />
-                            {isPlaying ? 'Pause' : 'Play'}
-                        </button>
-                    </div>
-                </motion.div>
 
-                {/* Social Icons Row */}
+
+                {/* Social Icons Row - Moved directly under text since Spotify is gone */}
                 <motion.div
                     className="flex gap-2"
                     initial={{ y: 20, opacity: 0 }}
@@ -169,88 +133,164 @@ const AboutView = () => {
             </div>
 
             {/* Right Column - Map Only */}
-            <div className="md:col-span-7">
+            <div className="md:col-span-7 h-[500px] md:h-auto">
+                {/* Fixed height on mobile, auto (full) on desktop */}
 
-                {/* Map - same height as left column */}
+                {/* Map Container */}
                 <motion.div
-                    className="h-full rounded-[24px] border border-white/10 relative group shadow-[0_25px_100px_rgba(0,0,0,0.65)] bg-[#101014] overflow-hidden"
+                    className="h-full rounded-[24px] border border-white/5 relative group shadow-2xl bg-[#0B0B15] overflow-hidden"
                     initial={{ x: 20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.2 }}
                 >
-                    {/* Map Background */}
-                    <div className="absolute inset-0 opacity-40"
+                    {/* Dark Vector Map Background */}
+                    <div className="absolute inset-0"
                         style={{
-                            backgroundImage: `url('${mapImage}')`,
+                            // Using a high-contrast dark map image to simulate the vector look
+                            backgroundImage: `url('https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg')`,
                             backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            filter: 'grayscale(100%) contrast(150%) brightness(50%)'
+                            backgroundPosition: 'center 60%', // Adjusted to center better
+                            filter: 'invert(1) hue-rotate(180deg) brightness(0.7) contrast(1.2)' // Brighter map as requested
                         }}
                     />
 
-                    <div className="absolute inset-0 z-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0wIDhoNDB2NDBIMHoiIGZpbGw9Im5vbmUiLz4KPGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz4KPC9zdmc+')] opacity-30" />
+                    {/* Vignette Overlay for that deep space look */}
+                    <div className="absolute inset-0 bg-gradient-radial from-transparent via-[#0B0B15]/50 to-[#0B0B15]" />
 
-                    <div className="relative z-10 h-full w-full p-6">
-                        {/* Header */}
-                        <div className="flex items-center gap-2 mb-2">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-white">
-                                <circle cx="12" cy="12" r="10" />
-                                <path d="M2 12h20" />
-                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                            </svg>
-                            <span className="text-xs font-bold tracking-widest text-white uppercase">My Journey</span>
+                    <div className="relative z-10 h-full w-full p-6 flex flex-col justify-between">
+                        {/* Header Area */}
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-sm font-bold tracking-widest text-primary uppercase drop-shadow-[0_0_10px_rgba(249,115,22,0.5)]">
+                                My Journey
+                            </h3>
+
+                            {/* Pulse Hint */}
+                            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1A1A2E] border border-primary/20">
+                                <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                                </span>
+                                <span className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Hover dots to explore</span>
+                            </div>
                         </div>
 
-                        {/* Info card - bigger */}
-                        <div className="absolute bottom-4 left-4 w-[320px] z-30 pointer-events-none">
+                        {/* Info card - Bottom Left */}
+                        <div className="w-[280px]">
                             <AnimatePresence mode="wait">
                                 {activePlace && (
                                     <motion.div
                                         key={activePlace.id}
-                                        initial={{ opacity: 0, y: 8 }}
+                                        initial={{ opacity: 0, y: 10 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: 8 }}
-                                        className="bg-black/90 backdrop-blur-xl border border-primary/50 rounded-2xl p-4 shadow-2xl"
+                                        exit={{ opacity: 0, y: 10 }}
+                                        className="bg-[#151520]/90 backdrop-blur-xl border border-primary/30 rounded-xl p-4 shadow-[0_0_30px_rgba(0,0,0,0.5)]"
                                     >
-                                        <p className="text-[10px] font-semibold text-primary mb-1">{activePlace.headline}</p>
-                                        <h3 className="text-lg font-bold text-white">{activePlace.name}</h3>
-                                        <p className="text-[9px] uppercase tracking-widest text-white/40 font-mono">{activePlace.timeline}</p>
-                                        <p className="text-xs text-gray-300 mt-2 leading-relaxed">{activePlace.details}</p>
+                                        <div className="flex items-center justify-between mb-1">
+                                            <h3 className="text-base font-bold text-white">{activePlace.name}</h3>
+                                            <span className="text-[10px] text-primary font-mono">{activePlace.coordinates}</span>
+                                        </div>
+                                        <p className="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-2">{activePlace.timeline}</p>
+                                        <p className="text-xs text-gray-300 leading-relaxed border-t border-white/5 pt-2">{activePlace.details}</p>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
                         </div>
 
-                        {/* Journey Path SVG */}
-                        <svg className="absolute inset-0 w-full h-full z-10 pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        {/* Journey Paths (SVG Overlay) */}
+                        <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 100 100" preserveAspectRatio="none">
                             <defs>
+                                <linearGradient id="gradientLine" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stopColor="hsl(15, 85%, 55%)" stopOpacity="0.2" /> {/* Primary (Orange) */}
+                                    <stop offset="100%" stopColor="hsl(15, 85%, 55%)" stopOpacity="0.8" /> {/* Primary (Orange) */}
+                                </linearGradient>
                                 <filter id="glow">
-                                    <feGaussianBlur stdDeviation="0.5" result="coloredBlur" />
+                                    <feGaussianBlur stdDeviation="0.8" result="coloredBlur" />
                                     <feMerge><feMergeNode in="coloredBlur" /><feMergeNode in="SourceGraphic" /></feMerge>
                                 </filter>
                             </defs>
+
+                            {/* Path 1: Yemen -> Malaysia */}
                             <path
-                                d={`M ${locations[0].x} ${locations[0].y} Q ${(locations[0].x + locations[1].x) / 2} ${Math.min(locations[0].y, locations[1].y) - 12}, ${locations[1].x} ${locations[1].y} Q ${(locations[1].x + locations[2].x) / 2} ${Math.min(locations[1].y, locations[2].y) - 15}, ${locations[2].x} ${locations[2].y}`}
-                                fill="none" stroke="#22d3ee" strokeWidth="0.4" strokeDasharray="1 1" opacity="0.5" filter="url(#glow)"
+                                id="path1"
+                                d={`M ${locations[0].x} ${locations[0].y} Q ${(locations[0].x + locations[1].x) / 2} ${Math.min(locations[0].y, locations[1].y) - 15} ${locations[1].x} ${locations[1].y}`}
+                                fill="none" stroke="url(#gradientLine)" strokeWidth="0.4" strokeDasharray="3 3" opacity="0.6"
                             />
-                            <circle r="0.8" fill="#22d3ee" filter="url(#glow)">
-                                <animateMotion dur="5s" repeatCount="indefinite" path={`M ${locations[0].x} ${locations[0].y} Q ${(locations[0].x + locations[1].x) / 2} ${Math.min(locations[0].y, locations[1].y) - 12}, ${locations[1].x} ${locations[1].y} Q ${(locations[1].x + locations[2].x) / 2} ${Math.min(locations[1].y, locations[2].y) - 15}, ${locations[2].x} ${locations[2].y}`} />
+
+                            {/* Path 2: Malaysia -> Netherlands */}
+                            <path
+                                id="path2"
+                                d={`M ${locations[1].x} ${locations[1].y} Q ${(locations[1].x + locations[2].x) / 2} ${Math.min(locations[1].y, locations[2].y) - 25} ${locations[2].x} ${locations[2].y}`}
+                                fill="none" stroke="url(#gradientLine)" strokeWidth="0.4" strokeDasharray="3 3" opacity="0.6"
+                            />
+
+                            {/* Flowing Dot Animation - Sequence */}
+                            {/* Dot 1: Yemen to Malaysia (First Half) */}
+                            <circle r="1" fill="hsl(15, 85%, 55%)" filter="url(#glow)">
+                                <animate
+                                    attributeName="opacity"
+                                    values="1;0"
+                                    keyTimes="0;1"
+                                    dur="3s"
+                                    begin="0s"
+                                    repeatCount="indefinite"
+                                    calcMode="discrete" // Instantly disappear at 50%
+                                    keyPoints="0.5;1" // Wait, keyPoints is for motion. For opacity we use time.
+                                />
+                                {/* simpler approach: animate opacity to be 1 from 0-1.5s, then 0 from 1.5-3s */}
+                                <animate
+                                    attributeName="opacity"
+                                    values="1;1;0;0"
+                                    keyTimes="0;0.49;0.5;1"
+                                    dur="3s"
+                                    repeatCount="indefinite"
+                                />
+                                <animateMotion dur="3s" repeatCount="indefinite" begin="0s" calcMode="linear" keyPoints="0;1" keyTimes="0;0.5">
+                                    <mpath href="#path1" />
+                                </animateMotion>
+                            </circle>
+
+                            {/* Dot 2: Malaysia to Netherlands (Second Half) */}
+                            <circle r="1" fill="hsl(15, 85%, 55%)" filter="url(#glow)">
+                                <animate
+                                    attributeName="opacity"
+                                    values="0;0;1;1"
+                                    keyTimes="0;0.5;0.51;1"
+                                    dur="3s"
+                                    repeatCount="indefinite"
+                                />
+                                <animateMotion dur="3s" repeatCount="indefinite" begin="0s" calcMode="linear" keyPoints="0;1" keyTimes="0.5;1">
+                                    {/* Timing mismatch here. simpler to just start at 1.5s but that desyncs loops sometimes. 
+                                         Better: Run full 3s duration, but only move during second half.
+                                     */}
+                                    <mpath href="#path2" />
+                                </animateMotion>
                             </circle>
                         </svg>
 
-                        {/* Location dots */}
+                        {/* Location Dots */}
                         {locations.map((place) => (
-                            <div key={place.id} className="absolute z-20" style={{ left: `${place.x}%`, top: `${place.y}%` }}>
+                            <div key={place.id} className="absolute" style={{ left: `${place.x}%`, top: `${place.y}%` }}>
                                 <motion.button
                                     type="button"
                                     onMouseEnter={() => setActiveLocation(place.id)}
                                     onMouseLeave={() => setActiveLocation(null)}
-                                    className="relative w-5 h-5 -ml-2.5 -mt-2.5"
-                                    whileHover={{ scale: 1.2 }}
+                                    className="group relative flex items-center justify-center w-8 h-8 -ml-4 -mt-4 cursor-pointer"
+                                    whileHover={{ scale: 1.1 }}
                                 >
-                                    <span className={`absolute inset-0 rounded-full blur-md transition-colors ${activeLocation === place.id ? 'bg-[#22d3ee]' : 'bg-white/20'}`} />
-                                    <span className={`absolute inset-1 rounded-full border transition-colors ${activeLocation === place.id ? 'border-[#22d3ee] bg-[#101014]' : 'border-white/60 bg-[#101014]'}`} />
-                                    <span className={`absolute inset-[5px] rounded-full transition-all ${activeLocation === place.id ? 'bg-[#22d3ee]' : 'bg-white'}`} />
+                                    {/* Ripple Effect */}
+                                    <span className="absolute inset-0 rounded-full bg-primary opacity-20 animate-ping group-hover:opacity-40" />
+
+                                    {/* Core Dot */}
+                                    <div className="w-3 h-3 bg-[#0B0B15] rounded-full border-2 border-primary shadow-[0_0_15px_#F97316] relative z-10 group-hover:bg-primary transition-colors" />
+
+                                    {/* Connector Line to Active Label (Optional visual) */}
+                                    {activeLocation === place.id && (
+                                        <motion.div
+                                            className="absolute top-1/2 left-1/2 w-[100px] h-[1px] bg-gradient-to-r from-primary to-transparent origin-left -z-10"
+                                            initial={{ scaleX: 0 }}
+                                            animate={{ scaleX: 1, rotate: 135 }} // Angled line
+                                        />
+                                    )}
                                 </motion.button>
                             </div>
                         ))}
@@ -277,7 +317,7 @@ const AboutView = () => {
                     <div>
                         <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Frontend</p>
                         <div className="flex flex-wrap gap-1.5">
-                            {['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'].map((tech) => (
+                            {['JavaScript', 'HTML/CSS', 'Vite', 'React', 'Tailwind CSS', 'TypeScript'].map((tech) => (
                                 <span key={tech} className="px-2.5 py-1 text-[11px] font-medium text-gray-300 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 hover:border-primary/30 transition-colors cursor-default">
                                     {tech}
                                 </span>
@@ -289,7 +329,7 @@ const AboutView = () => {
                     <div>
                         <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Backend</p>
                         <div className="flex flex-wrap gap-1.5">
-                            {['Node.js', 'Express', 'Python', 'PostgreSQL', 'MongoDB'].map((tech) => (
+                            {['Node.js', 'Express', 'Python', 'REST APIs', 'Supabase', 'Firebase', 'MySQL'].map((tech) => (
                                 <span key={tech} className="px-2.5 py-1 text-[11px] font-medium text-gray-300 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 hover:border-primary/30 transition-colors cursor-default">
                                     {tech}
                                 </span>
@@ -301,7 +341,7 @@ const AboutView = () => {
                     <div>
                         <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Tools</p>
                         <div className="flex flex-wrap gap-1.5">
-                            {['Git', 'GitHub', 'VS Code', 'Postman', 'npm'].map((tech) => (
+                            {['Git', 'GitHub', 'Bun', 'Notion', 'Terminal/CLI'].map((tech) => (
                                 <span key={tech} className="px-2.5 py-1 text-[11px] font-medium text-gray-300 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 hover:border-primary/30 transition-colors cursor-default">
                                     {tech}
                                 </span>
@@ -313,7 +353,7 @@ const AboutView = () => {
                     <div>
                         <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Design</p>
                         <div className="flex flex-wrap gap-1.5">
-                            {['Figma', 'Adobe XD', 'Photoshop', 'Illustrator'].map((tech) => (
+                            {['Figma', 'Photoshop', 'Aseprite', 'Canva'].map((tech) => (
                                 <span key={tech} className="px-2.5 py-1 text-[11px] font-medium text-gray-300 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 hover:border-primary/30 transition-colors cursor-default">
                                     {tech}
                                 </span>
@@ -325,7 +365,7 @@ const AboutView = () => {
                     <div>
                         <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Cloud & DevOps</p>
                         <div className="flex flex-wrap gap-1.5">
-                            {['AWS', 'Vercel', 'Docker', 'CI/CD', 'Linux'].map((tech) => (
+                            {['Vercel', 'Docker', 'Railway'].map((tech) => (
                                 <span key={tech} className="px-2.5 py-1 text-[11px] font-medium text-gray-300 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 hover:border-primary/30 transition-colors cursor-default">
                                     {tech}
                                 </span>
@@ -334,7 +374,7 @@ const AboutView = () => {
                     </div>
                 </div>
             </motion.div>
-        </div>
+        </div >
     );
 };
 
