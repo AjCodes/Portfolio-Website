@@ -1,7 +1,7 @@
 // Import project images
 import smartRoadsImg from '../assets/projects/smart-roads.png';
 import focusupImg from '../assets/projects/focusup.png';
-import portfolioImg from '../assets/projects/portfolio.png';
+import hairstyleImg from '../assets/projects/hairstyle-mockup.png';
 
 export const projects = [
   {
@@ -24,8 +24,7 @@ export const projects = [
       'AI-based traffic light optimization',
       'ESP32 microcontroller integration',
       'Firebase real-time database',
-      'Python dashboard for visualization',
-      'Reduces traffic congestion by 30%'
+      'Python dashboard for visualization'
     ]
   },
   {
@@ -48,32 +47,30 @@ export const projects = [
       'RPG-style leveling system (1-99)',
       'Four skill categories with XP tracking',
       'Habit tracking with streak system',
-      'Offline-first with AsyncStorage',
-      'Smart anti-spam XP scaling'
+      'Offline-first with AsyncStorage'
     ]
   },
   {
-    id: 'two-layer-portfolio',
-    title: 'Two-Layer Interactive Portfolio',
-    description: 'The website you\'re currently viewing - a unique dual-layer portfolio with personality-driven experience and professional workspace.',
-    longDescription: 'Built with React 19, Framer Motion for smooth animations, Tailwind CSS for styling, and React Router for seamless navigation. Features include custom cursor, Konami code easter egg, Spotify integration, AI chatbot, and an OS-simulator workspace.',
-    tech: ['React 19', 'Framer Motion', 'Tailwind CSS', 'Spotify API', 'React Router', 'Three.js'],
-    status: 'In Development',
-    category: 'Web Development',
-    year: '2025',
+    id: 'hairstyle-generator',
+    title: 'Hairstyle Generator',
+    description: 'AI-powered web app that lets you upload your photo and try different hairstyles and hair colors.',
+    longDescription: 'Built with React, TypeScript, and Vite. Uses the Gemini API to analyze your photo and generate realistic hairstyle previews. You can change hairstyles, hair colors, and even add beards to see how they would look on you.',
+    tech: ['React', 'TypeScript', 'Vite', 'Gemini API', 'AI/ML'],
+    status: 'Completed',
+    category: 'Web App',
+    year: '2024',
     featured: true,
-    image: portfolioImg,
+    image: hairstyleImg,
     links: {
-      github: 'https://github.com/AjCodes/Portfolio-Website',
+      github: 'https://github.com/AjCodes/Hairstyle-generator-',
       live: null
     },
     highlights: [
-      'Dual-layer interactive design',
-      'Custom animated cursor',
-      'Spotify API integration',
-      'Easter eggs (CR7, Man United)',
-      'AI chatbot with personality',
-      'Fully responsive design'
+      'Upload your own photo',
+      'AI-generated hairstyle previews',
+      'Change hair color',
+      'Add different beard styles',
+      'Powered by Gemini API'
     ]
   }
 ];

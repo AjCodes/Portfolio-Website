@@ -57,10 +57,7 @@
     scroll-behavior: smooth;
   }
 
-  /* Custom Cursor */
-  * {
-    cursor: none;
-  }
+
 
   /* Enhanced Custom scrollbar */
   ::-webkit-scrollbar {

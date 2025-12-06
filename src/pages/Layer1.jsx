@@ -5,26 +5,42 @@ import HomeView from '../components/Layer1/Views/HomeView';
 import AboutView from '../components/Layer1/Views/AboutView';
 import ProjectsView from '../components/Layer1/Views/ProjectsView';
 import CaseStudyView from '../components/Layer1/Views/CaseStudyView';
-import AJRobot from '../components/shared/AJRobot';
-import ThemeToggle from '../components/shared/ThemeToggle';
-import SeamlessBackground from '../components/shared/SeamlessBackground';
-import CustomCursor from '../components/shared/CustomCursor';
 import SpotifyPlayer from '../components/shared/SpotifyPlayer';
+import DotGrid from '../components/shared/DotGrid';
+import LocationTime from '../components/shared/LocationTime';
 
-const Layer1 = ({ onSwitch }) => {
+// Layer1 - Main portfolio page with different views
+const Layer1 = () => {
+  // Track which view is currently active (home, about, projects, casestudy)
   const [activeView, setActiveView] = useState('home');
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden bg-[hsl(var(--color-bg))] text-[hsl(var(--color-text))] transition-colors duration-300">
-      <CustomCursor />
-      <SpotifyPlayer activeView={activeView} />
-      {/* Global Background */}
-      <SeamlessBackground />
+    <div className="relative h-screen w-screen overflow-hidden bg-[#060010] text-[hsl(var(--color-text))] transition-colors duration-300">
+      {/* DotGrid Background */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <DotGrid
+          dotSize={2}
+          gap={20}
+          baseColor="#2e1065" // very dark violet
+          activeColor="#8b5cf6" // bright violet
+          proximity={100}
+          shockRadius={200}
+          shockStrength={3}
+          resistance={600}
+          returnDuration={1}
+        />
+      </div>
 
-      {/* Floating Navbar */}
+      {/* Location and Time Widget - bottom right corner */}
+      <LocationTime />
+
+      {/* Spotify music player widget */}
+      <SpotifyPlayer activeView={activeView} />
+
+      {/* Navigation bar at the top */}
       <FloatingNavbar activeView={activeView} setActiveView={setActiveView} />
 
-      {/* Main Content Area - Single Screen View Switcher */}
+      {/* Main content - switches between views with animations */}
       <main className="relative z-10 h-full w-full pt-20">
         <AnimatePresence mode="wait">
           {activeView === 'home' && (
@@ -80,10 +96,6 @@ const Layer1 = ({ onSwitch }) => {
           )}
         </AnimatePresence>
       </main>
-
-      {/* Shared Components */}
-      <AJRobot onSwitch={onSwitch} isLayer1={true} />
-      <ThemeToggle />
     </div>
   );
 };

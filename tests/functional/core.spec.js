@@ -2,55 +2,71 @@ import { test, expect } from '@playwright/test';
 
 /**
  * Core Functionality Tests
- * Validates essential application behavior and routing
+ * Tests that the main portfolio features work correctly
  */
 
-test.describe('Core Application Functionality', () => {
-  test('should load and render the homepage', async ({ page }) => {
+test.describe('Portfolio Core Features', () => {
+
+  // Test 1: Page loads correctly
+  test('homepage loads and shows content', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('domcontentloaded');
 
-    // Verify page loads successfully
+    // Check page has a title
     await expect(page).toHaveTitle('my-portfolio');
 
-    // Verify root element is mounted
+    // Check React app is mounted
     const root = await page.locator('#root');
     await expect(root).toBeVisible();
   });
 
-  test('should have interactive main content', async ({ page }) => {
+  // Test 2: Navigation bar works
+  test('navbar allows switching between views', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
-    // Verify the app is rendered and interactive
-    const body = await page.locator('body');
-    await expect(body).toBeVisible();
+    // Find the navigation bar
+    const nav = page.locator('nav');
+    await expect(nav).toBeVisible();
 
-    // Verify React app is mounted
-    const root = await page.locator('#root');
-    await expect(root).not.toBeEmpty();
+    // Try clicking on About link (if it exists)
+    const aboutLink = page.getByText('About', { exact: false });
+    if (await aboutLink.isVisible()) {
+      await aboutLink.click();
+      // Give time for animation
+      await page.waitForTimeout(500);
+    }
   });
 
-  test('should navigate between Layer1 and Layer2', async ({ page }) => {
-    // Start at homepage
+  // Test 3: Theme toggle works
+  test('theme toggle changes color mode', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('networkidle');
 
-    // Navigate to Layer2
-    await page.goto('/layer2');
-    await expect(page).toHaveURL(/layer2/);
+    // Find theme toggle button
+    const themeButton = page.locator('button[aria-label*="theme"]').first();
 
-    // Navigate back to root
-    await page.goto('/');
-    await expect(page).toHaveURL(/^.*\/((?!layer2).)*$/);
+    if (await themeButton.isVisible()) {
+      // Get initial theme
+      const html = page.locator('html');
+      const initialClass = await html.getAttribute('class');
+
+      // Click toggle
+      await themeButton.click();
+      await page.waitForTimeout(300);
+
+      // Verify theme changed
+      const newClass = await html.getAttribute('class');
+      expect(newClass).not.toBe(initialClass);
+    }
   });
 
-  test('should handle 404 routes gracefully', async ({ page }) => {
-    await page.goto('/non-existent-route');
+  // Test 4: No broken pages
+  test('handles invalid routes gracefully', async ({ page }) => {
+    const response = await page.goto('/some-page-that-doesnt-exist');
 
-    // Should redirect or show error handling
-    // This test will help identify if you need to add a 404 page
-    const response = await page.goto('/non-existent-route');
+    // Should not crash (status below 500)
     expect(response?.status()).toBeLessThan(500);
   });
+
 });

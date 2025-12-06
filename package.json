@@ -4,7 +4,6 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "clean": "node scripts/clean.js",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
@@ -12,15 +11,17 @@
     "test": "playwright test",
     "test:ui": "playwright test --ui",
     "test:headed": "playwright test --headed",
-    "test:report": "playwright show-report",
-    "get-token": "node scripts/get-refresh-token.js"
+    "test:report": "playwright show-report"
   },
   "dependencies": {
     "@vercel/speed-insights": "^1.2.0",
     "dotenv": "^17.2.3",
     "framer-motion": "^12.23.24",
+    "gsap": "^3.13.0",
+    "ogl": "^1.0.11",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "three": "^0.181.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

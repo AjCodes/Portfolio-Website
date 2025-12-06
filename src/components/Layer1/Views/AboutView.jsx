@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useMemo, useState } from 'react';
 import { useSpotify } from '../../../context/SpotifyContext';
 
+// Locations for the world map
 const locations = [
     {
         id: 'yemen',
@@ -10,8 +11,8 @@ const locations = [
         y: 55,
         headline: 'Origins',
         timeline: '0 – 4 yrs',
-        description: 'Where my story began.',
-        details: 'Desert sunrises and the first sparks of curiosity. Yemen grounded my perspective and taught me resilience early on.',
+        description: 'Where i was born and where everything started.',
+        details: 'Where i was born and where everything started.',
         coordinates: '15.3°N / 44.2°E'
     },
     {
@@ -20,9 +21,9 @@ const locations = [
         x: 78,
         y: 58,
         headline: 'Growth Phase',
-        timeline: '4 – 27 yrs',
-        description: 'Grew up across Kuala Lumpur.',
-        details: 'Multicultural energy, design school, and my first production deployments. Malaysia is where passion and craft collided.',
+        timeline: '4 – 18 yrs',
+        description: 'Where i grew up and became who i am.',
+        details: 'Where i grew up and became who i am.',
         coordinates: '3.1°N / 101.7°E'
     },
     {
@@ -31,11 +32,18 @@ const locations = [
         x: 49,
         y: 28,
         headline: 'Current Base',
-        timeline: 'Present',
-        description: 'Now building the future here.',
-        details: 'Europe’s innovation hub keeps me sharp. I’m exploring cutting-edge tooling, startups, and lifelong learning.',
+        timeline: '2018 – Present',
+        description: "Where i'm putting it all together.",
+        details: "Where i'm putting it all together.",
         coordinates: '52.4°N / 4.9°E'
     }
+];
+
+// Journey path coordinates (percentages matching location dots)
+const journeyPath = [
+    { x: 61, y: 55 },  // Yemen
+    { x: 78, y: 58 },  // Malaysia
+    { x: 49, y: 28 }   // Netherlands
 ];
 
 const mapImage = 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop';
@@ -54,15 +62,14 @@ const PlayGlyph = ({ playing }) => (
 );
 
 const AboutView = () => {
-    const [activeLocation, setActiveLocation] = useState('netherlands');
+    // null = no location selected (only show on hover)
+    const [activeLocation, setActiveLocation] = useState(null);
     const { isPlaying, togglePlay, currentTrack, isLoading, progress, error, hasInlineAudio } = useSpotify();
 
     const activePlace = useMemo(
-        () => locations.find(place => place.id === activeLocation) ?? locations[0],
+        () => locations.find(place => place.id === activeLocation),
         [activeLocation]
     );
-
-    const handleLocationChange = (id) => setActiveLocation(id);
 
     const openSpotify = () => {
         if (currentTrack?.trackUrl) {
@@ -70,220 +77,264 @@ const AboutView = () => {
         }
     };
 
-    const getLabelTransform = (x) => {
-        if (x < 35) return 'translate(-120%, -160%)';
-        if (x > 65) return 'translate(20%, -160%)';
-        return 'translate(-50%, -160%)';
-    };
-
     return (
-        <div className="h-full w-full flex flex-col md:flex-row items-center justify-center gap-8 px-8 pt-20 pb-8 max-w-7xl mx-auto relative z-20">
-            <div className="flex-1 flex flex-col gap-6 max-w-md w-full">
+        <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-4 px-6 pt-14 pb-4 max-w-7xl mx-auto relative z-20">
+
+            {/* Left Column - About Text + Spotify + Socials */}
+            <div className="md:col-span-5 flex flex-col gap-3">
+                {/* About Text Card - Starts at top */}
                 <motion.div
-                    className="glass-card p-8 rounded-3xl border border-white/10 bg-black/40 backdrop-blur-xl"
-                    initial={{ x: -50, opacity: 0 }}
+                    className="glass-card p-5 rounded-[24px] border border-white/5 bg-black/20 backdrop-blur-xl"
+                    initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.15 }}
                 >
-                    <p className="uppercase text-sm tracking-[0.4em] text-primary/70 font-mono mb-3">Layer 01 · Profile</p>
-                    <h2 className="text-4xl font-bold mb-4 text-gradient-premium">About Me</h2>
-                    <p className="text-gray-300 leading-relaxed mb-6 text-lg">
-                        I’m a full stack developer shaped by three cultures. From Yemen’s history, through Malaysia’s vibrant tech scene,
-                        to the Netherlands where I’m building high-touch experiences.
-                    </p>
-                    <p className="text-gray-400 text-sm font-mono border-l-2 border-primary pl-4">
-                        “Building digital experiences that feel alive.”
-                    </p>
-                </motion.div>
-
-                <motion.div
-                    className="glass-card p-6 rounded-2xl border border-white/10 bg-[#121212] relative overflow-hidden group shadow-xl"
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.35 }}
-                >
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#1DB954]/15 via-transparent to-transparent opacity-70 pointer-events-none" />
-
-                    {/* Header */}
-                    <div className="relative z-10 flex items-center gap-2 mb-4">
-                        <span className={`w-2.5 h-2.5 rounded-full ${isPlaying ? 'bg-[#1DB954] animate-pulse shadow-[0_0_12px_rgba(29,185,84,0.8)]' : 'bg-white/30'}`} />
-                        <p className="text-xs text-[#1DB954] font-bold uppercase tracking-[0.3em]">
-                            {isPlaying ? 'Currently Listening To' : 'Recently Played'}
+                    <h2 className="text-2xl md:text-3xl font-bold mb-3 text-gradient-premium leading-tight">I build things that stick with people.</h2>
+                    <div className="space-y-2 text-gray-300 leading-relaxed text-sm">
+                        <p>
+                            i've always been drawn to mixing ideas from different worlds. psychology, design, tech, whatever it takes to make something feel right. i don't like tunnel vision. when there's a problem in front of me, i need to see it from every angle before i can move forward.
+                        </p>
+                        <p>
+                            i'm also detailed to a fault. the kind of person who will spend way too long on something most people won't even notice. but those small things add up, and i think that's what separates good from forgettable.
+                        </p>
+                        <p>
+                            lately i've been obsessed with automating the boring parts of my workflow. if a task feels repetitive, i'd rather spend a few hours making it disappear forever than do it manually one more time. frees up space for the work that actually matters.
                         </p>
                     </div>
 
-                    <div className="relative flex gap-5">
-                        {/* Album Art - BIGGER */}
-                        <div className="relative w-28 h-28 rounded-xl overflow-hidden shadow-2xl shrink-0 border-2 border-white/10">
-                            {isLoading ? (
-                                <div className="w-full h-full bg-gray-800 animate-pulse" />
-                            ) : (
-                                <img
-                                    src={currentTrack?.image}
-                                    alt={currentTrack?.name || 'Album artwork'}
-                                    className={`w-full h-full object-cover transition-transform duration-700 ${isPlaying ? 'scale-110 rotate-1' : 'scale-100'}`}
-                                />
+                    <div className="mt-4 pt-3 border-t border-white/5">
+                        <p className="text-gray-400 text-sm font-mono italic">
+                            "Learning by doing, one project at a time."
+                        </p>
+                    </div>
+                </motion.div>
+
+                {/* Spotify Card - Bigger */}
+                <motion.div
+                    className="glass-card p-4 rounded-[20px] border border-white/10 bg-[#121212] relative overflow-hidden"
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.25 }}
+                >
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#1DB954]/10 via-transparent to-transparent opacity-50 pointer-events-none" />
+                    <div className="relative flex items-center gap-4">
+                        <div className="relative w-14 h-14 rounded-xl overflow-hidden shadow-lg shrink-0 border border-white/10">
+                            {isLoading ? <div className="w-full h-full bg-gray-800 animate-pulse" /> : (
+                                <img src={currentTrack?.image} alt={currentTrack?.name || 'Album'} className={`w-full h-full object-cover ${isPlaying ? 'animate-spin-slow' : ''}`} />
                             )}
-                            {/* Vinyl effect overlay */}
-                            {isPlaying && (
-                                <div className="absolute inset-0 bg-gradient-to-tr from-black/40 via-transparent to-white/20" />
-                            )}
+                            <div className="absolute inset-0 flex items-center justify-center"><div className="w-2 h-2 bg-[#121212] rounded-full border border-white/10" /></div>
                         </div>
-
-                        {/* Track Info */}
-                        <div className="flex-1 min-w-0 relative z-10 flex flex-col justify-between">
-                            {error ? (
-                                <p className="text-sm text-red-400">{error}</p>
-                            ) : (
-                                <div className="space-y-1">
-                                    <p className="text-base font-bold text-white line-clamp-2 leading-tight">
-                                        {currentTrack?.name || (isLoading ? 'Fetching track...' : 'Track unavailable')}
-                                    </p>
-                                    <p className="text-sm text-gray-400 truncate">
-                                        {currentTrack?.artist || (!isLoading && 'Artist unknown')}
-                                    </p>
-                                    <p className="text-xs text-gray-500 truncate">
-                                        {currentTrack?.album}
-                                    </p>
-                                </div>
-                            )}
-
-                            {/* Progress Bar */}
-                            <div className="space-y-1.5">
-                                <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
-                                    <motion.div
-                                        className={`h-full ${isPlaying ? 'bg-[#1DB954]' : 'bg-white/30'}`}
-                                        animate={{ width: `${Math.min(progress, 1) * 100}%` }}
-                                        transition={{ type: 'spring', stiffness: 120, damping: 20 }}
-                                    />
-                                </div>
-                                <div className="flex items-center justify-between text-[10px] text-gray-400">
-                                    <span>{isPlaying && hasInlineAudio ? 'Preview playing' : 'Tap to listen'}</span>
-                                </div>
+                        <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-1.5 mb-1">
+                                <span className={`w-2 h-2 rounded-full ${isPlaying ? 'bg-[#1DB954] animate-pulse' : 'bg-white/30'}`} />
+                                <p className="text-[9px] text-[#1DB954] font-bold uppercase tracking-widest">{isPlaying ? 'Now Playing' : 'Recently Played'}</p>
                             </div>
+                            <p className="text-base font-bold text-white line-clamp-1">{currentTrack?.name || 'Fetching...'}</p>
+                            <p className="text-sm text-gray-400 line-clamp-1">{currentTrack?.artist || 'Unknown Artist'}</p>
                         </div>
-                    </div>
-
-                    {/* Controls Row - COMPACT */}
-                    <div className="relative z-10 flex items-center justify-between mt-3 pt-3 border-t border-white/5">
-                        <button
-                            type="button"
-                            onClick={hasInlineAudio ? togglePlay : openSpotify}
-                            className="w-10 h-10 rounded-full bg-[#1DB954] hover:bg-[#1ed760] text-black flex items-center justify-center shadow-lg hover:scale-105 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1DB954]"
-                            aria-label={isPlaying ? 'Pause Spotify preview' : 'Play Spotify preview'}
-                        >
+                        <button onClick={hasInlineAudio ? togglePlay : openSpotify} className="px-4 py-2 rounded-full bg-[#1DB954] text-black text-sm font-bold hover:bg-[#1ed760] transition-colors flex items-center gap-1.5">
                             <PlayGlyph playing={isPlaying && hasInlineAudio} />
+                            {isPlaying ? 'Pause' : 'Play'}
                         </button>
-
-                        {currentTrack?.trackUrl && (
-                            <button
-                                type="button"
-                                onClick={openSpotify}
-                                className="text-[11px] text-[#1DB954] hover:text-white transition-colors font-semibold flex items-center gap-1"
-                            >
-                                Open Spotify
-                                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02z" />
-                                </svg>
-                            </button>
-                        )}
                     </div>
+                </motion.div>
+
+                {/* Social Icons Row */}
+                <motion.div
+                    className="flex gap-2"
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                >
+                    <a href="https://github.com/AjCodes" target="_blank" rel="noopener noreferrer"
+                        className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-primary/50 text-gray-400 hover:text-white transition-all flex items-center justify-center group">
+                        <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                            <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+                        </svg>
+                    </a>
+                    <a href="https://www.instagram.com/aboodmadridista/" target="_blank" rel="noopener noreferrer"
+                        className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#E1306C]/50 text-gray-400 hover:text-white transition-all flex items-center justify-center group">
+                        <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                            <path fillRule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.451 2.535c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.821-.049.975-.045 1.504-.207 1.857-.344.467-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.812-.045-.975-.207-1.504-.344-1.857a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clipRule="evenodd" />
+                        </svg>
+                    </a>
+                    <a href="#" target="_blank" rel="noopener noreferrer"
+                        className="flex-1 h-10 rounded-xl bg-gradient-to-r from-primary/20 to-purple-500/20 hover:from-primary/30 hover:to-purple-500/30 border border-primary/30 hover:border-primary/50 text-white transition-all flex items-center justify-center gap-2 group">
+                        <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                        <span className="text-xs font-semibold">Support</span>
+                    </a>
                 </motion.div>
             </div>
 
-            <motion.div
-                className="flex-1 w-full min-h-[450px] md:min-h-[500px] lg:h-[560px] rounded-[36px] border border-white/10 relative group shadow-[0_25px_100px_rgba(0,0,0,0.65)] bg-black/60"
-                initial={{ scale: 0.92, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 0.25 }}
-                onMouseLeave={() => setActiveLocation('netherlands')}
-            >
-                <div className="absolute inset-0 rounded-[36px] overflow-hidden">
-                    <div
-                        className="absolute inset-0 bg-cover bg-center opacity-80 transition-transform duration-700 group-hover:scale-105"
-                        style={{ backgroundImage: `url('${mapImage}')`, filter: 'grayscale(90%) contrast(120%) brightness(55%)' }}
+            {/* Right Column - Map Only */}
+            <div className="md:col-span-7">
+
+                {/* Map - same height as left column */}
+                <motion.div
+                    className="h-full rounded-[24px] border border-white/10 relative group shadow-[0_25px_100px_rgba(0,0,0,0.65)] bg-[#101014] overflow-hidden"
+                    initial={{ x: 20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                >
+                    {/* Map Background */}
+                    <div className="absolute inset-0 opacity-40"
+                        style={{
+                            backgroundImage: `url('${mapImage}')`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            filter: 'grayscale(100%) contrast(150%) brightness(50%)'
+                        }}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-black/80" />
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(147,197,253,0.15),_transparent_55%)]" />
-                </div>
 
-                <div className="relative z-10 h-full w-full">
-                    <div className="absolute inset-6 rounded-[28px] border border-white/5 pointer-events-none" />
-                    <div className="absolute inset-0 bg-[linear-gradient(transparent_95%,rgba(255,255,255,0.05)_95%),linear-gradient(90deg,transparent_95%,rgba(255,255,255,0.05)_95%)] bg-[length:80px_80px] opacity-30 pointer-events-none" />
+                    <div className="absolute inset-0 z-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0wIDhoNDB2NDBIMHoiIGZpbGw9Im5vbmUiLz4KPGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz4KPC9zdmc+')] opacity-30" />
 
-                    <div className="absolute top-6 right-6 w-[280px] max-w-[80%] z-30">
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={activePlace.id}
-                                initial={{ opacity: 0, y: -12, scale: 0.98 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, y: -12, scale: 0.98 }}
-                                transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-                                className="bg-black/85 backdrop-blur-2xl border border-primary/50 rounded-3xl p-5 shadow-[0_20px_60px_rgba(0,0,0,0.8)]"
-                            >
-                                <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.35em] text-primary/70">
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-base">📍</span>
-                                        <span className="font-mono">Location data</span>
-                                    </div>
-                                    <span className="font-mono tracking-[0.2em] text-white/50">{activePlace.coordinates}</span>
-                                </div>
-                                <div className="border-t border-white/10 my-4" />
-                                <p className="text-sm text-primary font-semibold">{activePlace.headline}</p>
-                                <h3 className="text-2xl font-bold text-white leading-tight">{activePlace.name}</h3>
-                                <p className="text-xs uppercase tracking-[0.4em] text-white/40 font-mono">{activePlace.timeline}</p>
-                                <p className="text-sm text-gray-300 leading-relaxed mt-4">{activePlace.details}</p>
-                            </motion.div>
-                        </AnimatePresence>
-                    </div>
+                    <div className="relative z-10 h-full w-full p-6">
+                        {/* Header */}
+                        <div className="flex items-center gap-2 mb-2">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-white">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M2 12h20" />
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                            </svg>
+                            <span className="text-xs font-bold tracking-widest text-white uppercase">My Journey</span>
+                        </div>
 
-                    {locations.map((place) => (
-                        <div
-                            key={place.id}
-                            className="absolute z-20"
-                            style={{ left: `${place.x}%`, top: `${place.y}%` }}
-                            onMouseLeave={() => setActiveLocation('netherlands')}
-                        >
-                            <motion.button
-                                type="button"
-                                onMouseEnter={() => handleLocationChange(place.id)}
-                                onFocus={() => handleLocationChange(place.id)}
-                                onClick={() => handleLocationChange(place.id)}
-                                aria-pressed={activeLocation === place.id}
-                                className="relative w-6 h-6 -ml-3 -mt-3"
-                                whileHover={{ scale: 1.15 }}
-                                transition={{ duration: 0.2 }}
-                            >
-                                <span className="absolute inset-0 rounded-full bg-primary/30 blur-xl" />
-                                <span className={`absolute inset-1 rounded-full border-2 transition-colors duration-300 ${activeLocation === place.id ? 'border-[#1DB954]' : 'border-white/70'}`} />
-                                <span className={`absolute inset-0 rounded-full transition-all duration-300 ${activeLocation === place.id ? 'bg-[#1DB954] scale-100' : 'bg-white scale-75'}`} />
-                            </motion.button>
-
-                            <AnimatePresence>
-                                {activeLocation === place.id && (
+                        {/* Info card - bigger */}
+                        <div className="absolute bottom-4 left-4 w-[320px] z-30 pointer-events-none">
+                            <AnimatePresence mode="wait">
+                                {activePlace && (
                                     <motion.div
-                                        initial={{ opacity: 0, scale: 0.9, y: -8 }}
-                                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                                        exit={{ opacity: 0, scale: 0.9, y: -8 }}
-                                        transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-                                        className="absolute top-8 left-1/2 -translate-x-1/2 px-3 py-2 rounded-xl bg-black/90 backdrop-blur-md border border-white/20 shadow-2xl min-w-[140px] max-w-[180px] pointer-events-none"
+                                        key={activePlace.id}
+                                        initial={{ opacity: 0, y: 8 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: 8 }}
+                                        className="bg-black/90 backdrop-blur-xl border border-primary/50 rounded-2xl p-4 shadow-2xl"
                                     >
-                                        <p className="text-xs font-bold text-white whitespace-nowrap">{place.name}</p>
-                                        <p className="text-[10px] text-gray-400 mt-0.5 leading-tight">{place.description}</p>
-                                        {/* Arrow pointing to dot */}
-                                        <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-black/90 border-l border-t border-white/20 rotate-45" />
+                                        <p className="text-[10px] font-semibold text-primary mb-1">{activePlace.headline}</p>
+                                        <h3 className="text-lg font-bold text-white">{activePlace.name}</h3>
+                                        <p className="text-[9px] uppercase tracking-widest text-white/40 font-mono">{activePlace.timeline}</p>
+                                        <p className="text-xs text-gray-300 mt-2 leading-relaxed">{activePlace.details}</p>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
                         </div>
-                    ))}
 
-                    <div className="absolute bottom-6 left-6 sm:left-auto sm:right-6 text-[11px] tracking-[0.35em] text-primary/70 font-mono border border-primary/40 px-4 py-2 rounded-lg bg-black/60 backdrop-blur-sm shadow-lg">
-                        COORD · {activePlace.name.toUpperCase()}
+                        {/* Journey Path SVG */}
+                        <svg className="absolute inset-0 w-full h-full z-10 pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <defs>
+                                <filter id="glow">
+                                    <feGaussianBlur stdDeviation="0.5" result="coloredBlur" />
+                                    <feMerge><feMergeNode in="coloredBlur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                                </filter>
+                            </defs>
+                            <path
+                                d={`M ${locations[0].x} ${locations[0].y} Q ${(locations[0].x + locations[1].x) / 2} ${Math.min(locations[0].y, locations[1].y) - 12}, ${locations[1].x} ${locations[1].y} Q ${(locations[1].x + locations[2].x) / 2} ${Math.min(locations[1].y, locations[2].y) - 15}, ${locations[2].x} ${locations[2].y}`}
+                                fill="none" stroke="#22d3ee" strokeWidth="0.4" strokeDasharray="1 1" opacity="0.5" filter="url(#glow)"
+                            />
+                            <circle r="0.8" fill="#22d3ee" filter="url(#glow)">
+                                <animateMotion dur="5s" repeatCount="indefinite" path={`M ${locations[0].x} ${locations[0].y} Q ${(locations[0].x + locations[1].x) / 2} ${Math.min(locations[0].y, locations[1].y) - 12}, ${locations[1].x} ${locations[1].y} Q ${(locations[1].x + locations[2].x) / 2} ${Math.min(locations[1].y, locations[2].y) - 15}, ${locations[2].x} ${locations[2].y}`} />
+                            </circle>
+                        </svg>
+
+                        {/* Location dots */}
+                        {locations.map((place) => (
+                            <div key={place.id} className="absolute z-20" style={{ left: `${place.x}%`, top: `${place.y}%` }}>
+                                <motion.button
+                                    type="button"
+                                    onMouseEnter={() => setActiveLocation(place.id)}
+                                    onMouseLeave={() => setActiveLocation(null)}
+                                    className="relative w-5 h-5 -ml-2.5 -mt-2.5"
+                                    whileHover={{ scale: 1.2 }}
+                                >
+                                    <span className={`absolute inset-0 rounded-full blur-md transition-colors ${activeLocation === place.id ? 'bg-[#22d3ee]' : 'bg-white/20'}`} />
+                                    <span className={`absolute inset-1 rounded-full border transition-colors ${activeLocation === place.id ? 'border-[#22d3ee] bg-[#101014]' : 'border-white/60 bg-[#101014]'}`} />
+                                    <span className={`absolute inset-[5px] rounded-full transition-all ${activeLocation === place.id ? 'bg-[#22d3ee]' : 'bg-white'}`} />
+                                </motion.button>
+                            </div>
+                        ))}
+                    </div>
+                </motion.div>
+            </div>
+
+            {/* Tech Stack Section - Full Width */}
+            <motion.div
+                className="md:col-span-12 glass-card p-4 rounded-[20px] border border-white/10 bg-black/30 backdrop-blur-xl"
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.35 }}
+            >
+                <div className="flex items-center gap-2 mb-4">
+                    <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                    <span className="text-xs font-bold tracking-widest text-white uppercase">Tech Stack</span>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    {/* Frontend */}
+                    <div>
+                        <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Frontend</p>
+                        <div className="flex flex-wrap gap-1.5">
+                            {['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'].map((tech) => (
+                                <span key={tech} className="px-2.5 py-1 text-[11px] font-medium text-gray-300 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 hover:border-primary/30 transition-colors cursor-default">
+                                    {tech}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Backend */}
+                    <div>
+                        <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Backend</p>
+                        <div className="flex flex-wrap gap-1.5">
+                            {['Node.js', 'Express', 'Python', 'PostgreSQL', 'MongoDB'].map((tech) => (
+                                <span key={tech} className="px-2.5 py-1 text-[11px] font-medium text-gray-300 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 hover:border-primary/30 transition-colors cursor-default">
+                                    {tech}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Tools */}
+                    <div>
+                        <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Tools</p>
+                        <div className="flex flex-wrap gap-1.5">
+                            {['Git', 'GitHub', 'VS Code', 'Postman', 'npm'].map((tech) => (
+                                <span key={tech} className="px-2.5 py-1 text-[11px] font-medium text-gray-300 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 hover:border-primary/30 transition-colors cursor-default">
+                                    {tech}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Design */}
+                    <div>
+                        <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Design</p>
+                        <div className="flex flex-wrap gap-1.5">
+                            {['Figma', 'Adobe XD', 'Photoshop', 'Illustrator'].map((tech) => (
+                                <span key={tech} className="px-2.5 py-1 text-[11px] font-medium text-gray-300 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 hover:border-primary/30 transition-colors cursor-default">
+                                    {tech}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Cloud & DevOps */}
+                    <div>
+                        <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Cloud & DevOps</p>
+                        <div className="flex flex-wrap gap-1.5">
+                            {['AWS', 'Vercel', 'Docker', 'CI/CD', 'Linux'].map((tech) => (
+                                <span key={tech} className="px-2.5 py-1 text-[11px] font-medium text-gray-300 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 hover:border-primary/30 transition-colors cursor-default">
+                                    {tech}
+                                </span>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </motion.div>
-        </div >
+        </div>
     );
 };
 

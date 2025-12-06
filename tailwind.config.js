@@ -7,6 +7,9 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      backgroundImage: {
+        // 'portfolio-bg': "url('/portfolio-bg.png')", // Removed - using DotGrid component
+      },
       colors: {
         // Light Theme - Orange/Cool Palette (like logo)
         primary: {
