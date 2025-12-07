@@ -1,11 +1,25 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const CustomCursor = () => {
     const canvasRef = useRef(null);
     const pointsRef = useRef([]);
     const mouseRef = useRef({ x: 0, y: 0 });
+    const [isTouchDevice, setIsTouchDevice] = useState(false);
 
     useEffect(() => {
+        const checkTouch = () => {
+            setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches);
+        };
+
+        checkTouch();
+        window.addEventListener('resize', checkTouch);
+
+        return () => window.removeEventListener('resize', checkTouch);
+    }, []);
+
+    useEffect(() => {
+        if (isTouchDevice) return;
+
         const canvas = canvasRef.current;
         if (!canvas) return;
 
@@ -85,7 +99,9 @@ const CustomCursor = () => {
             window.removeEventListener('mousemove', handleMouseMove);
             cancelAnimationFrame(animationFrameId);
         };
-    }, []);
+    }, [isTouchDevice]);
+
+    if (isTouchDevice) return null;
 
     return (
         <canvas

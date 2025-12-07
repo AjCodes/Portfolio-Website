@@ -76,9 +76,9 @@ const GlitchTitle = ({ text }) => {
 
 const HomeView = ({ setActiveView }) => {
     return (
-        <div className="h-full w-full relative overflow-hidden flex flex-col items-center justify-center text-center px-4">
+        <div className="min-h-full w-full relative overflow-hidden flex flex-col items-center justify-center text-center px-4 pt-40 pb-32">
             {/* Content */}
-            <div className="relative z-10 flex flex-col items-center justify-center mt-[-40px]">
+            <div className="relative z-10 flex flex-col items-center justify-center">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}

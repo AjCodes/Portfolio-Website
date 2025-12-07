@@ -51,12 +51,21 @@ src/
 │       ├── SpotifyPlayer.jsx
 │       └── WavePlayer.jsx
 ├── context/
-│   ├── SpotifyContext.jsx
-│   └── ThemeContext.jsx
+│   └── SpotifyContext.jsx
 ├── data/
 │   └── projects.js
 └── pages/
     └── Layer1.jsx
+```
+
+## Testing
+
+```bash
+# Run Playwright tests
+npm run test
+
+# Run with UI
+npm run test:ui
 ```
 
 ## Environment Variables

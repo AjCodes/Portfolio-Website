@@ -17,7 +17,7 @@ const Layer1 = () => {
   const [activeView, setActiveView] = useState('home');
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden bg-[#060010] text-[hsl(var(--color-text))] transition-colors duration-300">
+    <div className="relative min-h-screen w-screen overflow-y-auto overflow-x-hidden bg-[#060010] text-[hsl(var(--color-text))] transition-colors duration-300">
       {/* DotGrid Background */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <DotGrid
