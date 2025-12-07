@@ -1,85 +1,76 @@
-# Portfolio 2025
+# AJ's Portfolio
 
-A personal portfolio website built with **React**, **Vite**, and **TailwindCSS**. It features smooth animations, a 3D-style interactive background, and a clean glassmorphic UI.
+My personal portfolio website built with React, Vite, and TailwindCSS.
 
-## 🚀 Quick Start in 5 Minutes
+## Live Demo
+[ajcodex.com](https://ajcodex.com)
 
-1.  **Install Node.js** (if you haven't already).
-2.  **Clone this repo** (or download it).
-3.  **Open terminal** in the project folder.
-4.  **Install dependencies**:
-    ```bash
-    npm install
-    ```
-5.  **Run the website**:
-    ```bash
-    npm run dev
-    ```
-    > Click the `http://localhost:5173` link in your terminal to see it!
+## Tech Stack
 
----
+- **React 19** – UI library
+- **Vite** – Build tool
+- **TailwindCSS** – Styling
+- **Framer Motion** – Animations
+- **GSAP** – Background effects
 
-## 🧠 Can I learn this in 4 days? (Yes!)
+## Features
 
-If you want to understand how this works quickly, focus on these 4 concepts. Ignore the complex math files (`DotGrid`, `CustomCursor`) for now—they are just "decoration".
+- Interactive dot grid background with mouse tracking
+- Smooth page transitions between views
+- Spotify integration showing recently played tracks
+- Custom cursor with trail effect
+- World map showing my journey
+- Case study modal with detailed project breakdowns
 
-### 1. Components (The Building Blocks)
-React is about breaking a page into small pieces.
-- Look at `src/components/Layer1/Views/AboutView.jsx`.
-- It's just a function that returns HTML-like code (JSX).
-- `className="..."` is just styling (Tailwind CSS).
+## Getting Started
 
-### 2. State (The Memory)
-Variables that change the UI used `useState`.
-```javascript
-const [isPlaying, setIsPlaying] = useState(false);
-```
-- `isPlaying`: The current value (true/false).
-- `setIsPlaying`: The function to change it.
-- When you call `setIsPlaying(true)`, React automatically updates the screen.
+```bash
+# Install dependencies
+npm install
 
-### 3. Props (Passing Data)
-How do we send data to a component? Like attributes in HTML.
-```jsx
-<ProjectCard project={myProjectData} />
-```
-Inside `ProjectCard`, we receive it:
-```javascript
-const ProjectCard = ({ project }) => { ... }
+# Run development server
+npm run dev
+
+# Build for production
+npm run build
 ```
 
-### 4. Arrays & Mapping (Lists)
-Instead of copy-pasting HTML, we loop through data.
-```javascript
-{projects.map((project, index) => (
-  <ProjectCard key={index} project={project} />
-))}
+## Project Structure
+
 ```
-This takes the list of projects and creates a card for each one.
+src/
+├── components/
+│   ├── Layer1/
+│   │   ├── FloatingNavbar.jsx
+│   │   └── Views/
+│   │       ├── HomeView.jsx
+│   │       ├── AboutView.jsx
+│   │       ├── ProjectsView.jsx
+│   │       └── CaseStudyView.jsx
+│   └── shared/
+│       ├── DotGrid.jsx
+│       ├── CustomCursor.jsx
+│       ├── SpotifyPlayer.jsx
+│       └── WavePlayer.jsx
+├── context/
+│   ├── SpotifyContext.jsx
+│   └── ThemeContext.jsx
+├── data/
+│   └── projects.js
+└── pages/
+    └── Layer1.jsx
+```
 
----
+## Environment Variables
 
-## 📂 Project Structure
+For Spotify integration, create a `.env` file:
 
-- **`src/App.jsx`**: The main entry point. It loads `Layer1`.
-- **`src/pages/Layer1.jsx`**: The main container. It handles switching between Home, About, Projects, and Case Study.
-- **`src/components/Layer1/Views/`**: The actual pages (Home, About, Projects, Case Study). edit these to change content!
-- **`src/components/shared/`**: Widgets like the Music Player, Navbar, and Cursor.
-- **`src/data/projects.js`**: Go here to update your project info, images, and links.
+```
+VITE_SPOTIFY_CLIENT_ID=your_client_id
+VITE_SPOTIFY_CLIENT_SECRET=your_client_secret
+VITE_SPOTIFY_REFRESH_TOKEN=your_refresh_token
+```
 
-## 🛠 Tech Stack
+## License
 
-- **React**: The UI library.
-- **Tailwind CSS**: Styling (classes like `flex`, `text-white`, `p-4`).
-- **Framer Motion**: For all the smooth animations (`motion.div`).
-- **GSAP**: For the background dot grid animation.
-
-## 📝 Editing Content
-
-- **Change Project Info**: Edit `src/data/projects.js`.
-- **Change About Text**: Edit `src/components/Layer1/Views/AboutView.jsx`.
-- **Change Colors**: Edit `tailwind.config.js` (look for `colors`).
-
----
-
-*Built with ❤️ in 2025.*
+MIT
