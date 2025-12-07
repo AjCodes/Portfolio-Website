@@ -19,46 +19,6 @@ A personal portfolio website built with **React**, **Vite**, and **TailwindCSS**
 
 ---
 
-## 🧠 Can I learn this in 4 days? (Yes!)
-
-If you want to understand how this works quickly, focus on these 4 concepts. Ignore the complex math files (`DotGrid`, `CustomCursor`) for now—they are just "decoration".
-
-### 1. Components (The Building Blocks)
-React is about breaking a page into small pieces.
-- Look at `src/components/Layer1/Views/AboutView.jsx`.
-- It's just a function that returns HTML-like code (JSX).
-- `className="..."` is just styling (Tailwind CSS).
-
-### 2. State (The Memory)
-Variables that change the UI used `useState`.
-```javascript
-const [isPlaying, setIsPlaying] = useState(false);
-```
-- `isPlaying`: The current value (true/false).
-- `setIsPlaying`: The function to change it.
-- When you call `setIsPlaying(true)`, React automatically updates the screen.
-
-### 3. Props (Passing Data)
-How do we send data to a component? Like attributes in HTML.
-```jsx
-<ProjectCard project={myProjectData} />
-```
-Inside `ProjectCard`, we receive it:
-```javascript
-const ProjectCard = ({ project }) => { ... }
-```
-
-### 4. Arrays & Mapping (Lists)
-Instead of copy-pasting HTML, we loop through data.
-```javascript
-{projects.map((project, index) => (
-  <ProjectCard key={index} project={project} />
-))}
-```
-This takes the list of projects and creates a card for each one.
-
----
-
 ## 📂 Project Structure
 
 - **`src/App.jsx`**: The main entry point. It loads `Layer1`.
