@@ -1,4 +1,4 @@
-# Portfolio 2025
+# AJCodex
 
 A personal portfolio website built with **React**, **Vite**, and **TailwindCSS**. It features smooth animations, a 3D-style interactive background, and a clean glassmorphic UI.
 
@@ -41,5 +41,3 @@ A personal portfolio website built with **React**, **Vite**, and **TailwindCSS**
 - **Change Colors**: Edit `tailwind.config.js` (look for `colors`).
 
 ---
-
-*Built with ❤️ in 2025.*
