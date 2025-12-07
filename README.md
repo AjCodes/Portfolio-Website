@@ -1,15 +1,7 @@
-<<<<<<< HEAD
-# AJ's Portfolio
-🌐 [ajcodex.com](https://ajcodex.com)
-=======
 # AJCodex
-
->>>>>>> 6170d09200292dee641f304f76d535efb31f4b4f
+🌐 [ajcodex.com](https://ajcodex.com)
 
 My personal portfolio website built with React, Vite, and TailwindCSS.
-
-## Live Demo
-[ajcodex.com](https://ajcodex.com)
 
 ## Tech Stack
 
@@ -19,7 +11,6 @@ My personal portfolio website built with React, Vite, and TailwindCSS.
 - **Framer Motion** – Animations
 - **GSAP** – Background effects
 
-<<<<<<< HEAD
 ## Features
 
 - Interactive dot grid background with mouse tracking
@@ -71,9 +62,6 @@ src/
 ## Environment Variables
 
 For Spotify integration, create a `.env` file:
-=======
-## 📂 Project Structure
->>>>>>> 6170d09200292dee641f304f76d535efb31f4b4f
 
 ```
 VITE_SPOTIFY_CLIENT_ID=your_client_id
@@ -81,21 +69,12 @@ VITE_SPOTIFY_CLIENT_SECRET=your_client_secret
 VITE_SPOTIFY_REFRESH_TOKEN=your_refresh_token
 ```
 
+## Editing Content
+
+- **Change Project Info**: Edit `src/data/projects.js`
+- **Change About Text**: Edit `src/components/Layer1/Views/AboutView.jsx`
+- **Change Colors**: Edit `tailwind.config.js`
+
 ## License
 
-<<<<<<< HEAD
 MIT
-=======
-- **React**: The UI library.
-- **Tailwind CSS**: Styling (classes like `flex`, `text-white`, `p-4`).
-- **Framer Motion**: For all the smooth animations (`motion.div`).
-- **GSAP**: For the background dot grid animation.
-
-## 📝 Editing Content
-
-- **Change Project Info**: Edit `src/data/projects.js`.
-- **Change About Text**: Edit `src/components/Layer1/Views/AboutView.jsx`.
-- **Change Colors**: Edit `tailwind.config.js` (look for `colors`).
-
----
->>>>>>> 6170d09200292dee641f304f76d535efb31f4b4f
