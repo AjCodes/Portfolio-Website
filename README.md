@@ -1,5 +1,6 @@
 # AJCodex
 
+
 A personal portfolio website built with **React**, **Vite**, and **TailwindCSS**. It features smooth animations, a 3D-style interactive background, and a clean glassmorphic UI.
 
 ## 🚀 Quick Start in 5 Minutes
