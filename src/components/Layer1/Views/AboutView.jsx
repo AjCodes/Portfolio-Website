@@ -212,7 +212,7 @@ const AboutView = () => {
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                                     <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                                 </span>
-                                <span className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Hover dots to explore</span>
+                                <p className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Hover over dots to explore</p>
                             </div>
                         </div>
 

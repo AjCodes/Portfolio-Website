@@ -68,10 +68,18 @@ const BookCard = ({ study, onClick }) => (
             <p className="text-sm text-gray-400 mb-4 line-clamp-2">
                 {study.subtitle}
             </p>
-            <div className="flex items-center gap-2 text-xs text-gray-500">
-                <span>{study.year}</span>
-                <span>•</span>
-                <span>{study.duration}</span>
+            {/* Tech Stack Preview - Replaces Duration */}
+            <div className="flex flex-wrap gap-1.5 mb-1">
+                {study.tech.slice(0, 3).map((tech, i) => (
+                    <span key={i} className="text-[9px] px-1.5 py-0.5 rounded bg-white/10 text-gray-300 border border-white/5">
+                        {tech}
+                    </span>
+                ))}
+                {study.tech.length > 3 && (
+                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/10 text-gray-400 border border-white/5">
+                        +{study.tech.length - 3}
+                    </span>
+                )}
             </div>
 
             {/* Read indicator */}
