@@ -67,7 +67,7 @@ const Layer1 = () => {
           {activeView === 'about' && (
             <motion.div
               key="about"
-              className="h-full w-full"
+              className="h-full w-full overflow-hidden"
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -30 }}
