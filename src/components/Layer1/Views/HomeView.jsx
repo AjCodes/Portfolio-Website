@@ -100,7 +100,7 @@ const HomeView = ({ setActiveView }) => {
                     {/* Tagline using Typewriter */}
                     <div className="h-[60px] md:h-[80px] flex items-center justify-center mb-6">
                         <p className="text-3xl md:text-4xl lg:text-5xl font-semibold text-primary/90 dark:text-primary leading-tight">
-                            <TypewriterText text="Building experiences people remember" delay={0.8} />
+                            <TypewriterText text="Building experiences people remember" delay={0.2} />
                         </p>
                     </div>
 
@@ -109,7 +109,7 @@ const HomeView = ({ setActiveView }) => {
                         className="text-xl md:text-2xl lg:text-3xl mb-12 font-light text-gray-400 max-w-3xl mx-auto leading-relaxed"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ duration: 0.6, delay: 2.5 }} // Delay until typing finishes roughly
+                        transition={{ duration: 0.6, delay: 1.2 }} // Faster delay
                     >
                         Developer who crafts more than just code.
                     </motion.p>
@@ -119,7 +119,7 @@ const HomeView = ({ setActiveView }) => {
                         className="flex gap-6 justify-center flex-wrap"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 2.7 }}
+                        transition={{ duration: 0.6, delay: 1.4 }}
                     >
                         <motion.button
                             onClick={() => setActiveView('projects')}
