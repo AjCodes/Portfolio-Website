@@ -1,4 +1,5 @@
 # AJ's Portfolio
+🌐 [ajcodex.com](https://ajcodex.com)
 
 My personal portfolio website built with React, Vite, and TailwindCSS.
 
