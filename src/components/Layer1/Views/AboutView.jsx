@@ -86,7 +86,7 @@ const AboutView = () => {
     );
 
     return (
-        <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-2 px-6 pt-2 pb-4 max-w-7xl mx-auto relative z-20">
+        <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-2 px-6 pt-6 pb-4 max-w-7xl mx-auto relative z-20">
 
             {/* Left Column - Bio, Socials, Contact (5 Cols) */}
             <div className="md:col-span-5 flex flex-col gap-2">

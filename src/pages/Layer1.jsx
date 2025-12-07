@@ -5,6 +5,7 @@ import HomeView from '../components/Layer1/Views/HomeView';
 import AboutView from '../components/Layer1/Views/AboutView';
 import ProjectsView from '../components/Layer1/Views/ProjectsView';
 import CaseStudyView from '../components/Layer1/Views/CaseStudyView';
+import SpotifyPlayer from '../components/shared/SpotifyPlayer';
 import WavePlayer from '../components/shared/WavePlayer';
 import DotGrid from '../components/shared/DotGrid';
 import LocationTime from '../components/shared/LocationTime';
@@ -37,6 +38,9 @@ const Layer1 = () => {
 
       {/* Wave Music Player (Top Right) */}
       <WavePlayer />
+
+      {/* Spotify Widget (Bottom Left - Controlled by activeView) */}
+      <SpotifyPlayer activeView={activeView} />
 
       {/* Navigation bar at the top */}
       <FloatingNavbar activeView={activeView} setActiveView={setActiveView} />

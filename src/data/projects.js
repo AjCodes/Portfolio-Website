@@ -12,7 +12,7 @@ export const projects = [
     tech: ['ESP32', 'Node.js', 'Express', 'Firebase', 'Python', 'Ultrasonic Sensors', 'IoT'],
     status: 'Completed',
     category: 'IoT & AI',
-    year: '2024',
+    year: '2025',
     featured: true,
     image: smartRoadsImg,
     links: {

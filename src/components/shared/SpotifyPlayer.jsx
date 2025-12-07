@@ -67,8 +67,8 @@ const SpotifyPlayer = ({ activeView }) => {
     };
   }, [isPlaying, currentTrack, togglePlay]);
 
-  // Show only on home page
-  if (isLoading || !currentTrack || activeView !== 'home') return null;
+  // Show only on about page
+  if (isLoading || !currentTrack || activeView !== 'about') return null;
 
   return (
     <motion.div
