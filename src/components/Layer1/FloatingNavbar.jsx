@@ -1,67 +1,88 @@
 import { motion } from 'framer-motion';
-import { useState } from 'react';
 
-const FloatingNavbar = ({ activeView, setActiveView }) => {
-  const [isHovered, setIsHovered] = useState(false);
+const navItems = [
+  { id: 'home', label: 'Home' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'about', label: 'About Me' },
+];
 
-  const navItems = [
-    { id: 'home', label: 'Home' },
-    { id: 'projects', label: 'Projects' },
-    { id: 'casestudy', label: 'Case Study' },
-    { id: 'about', label: 'About Me' },
-  ];
+const FloatingNavbar = ({ activeSection = 'home' }) => {
+  const handleClick = (event, id) => {
+    event.preventDefault();
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   return (
-    <motion.nav
-      className="fixed top-4 left-0 right-0 z-50 flex justify-center pointer-events-none"
-      initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <motion.div
-        className={`flex items-center gap-2 px-2 py-2 bg-white/5 dark:bg-white/5 backdrop-blur-md border border-primary/20 dark:border-primary/30 rounded-full shadow-lg transition-all duration-300 pointer-events-auto ${isHovered ? 'scale-100' : 'scale-90 opacity-80'}`}
-        animate={{
-          boxShadow: isHovered ? [
-            '0 10px 30px -10px rgba(0,0,0,0.3)',
-            '0 10px 40px -10px rgba(14, 165, 233, 0.2)',
-            '0 10px 30px -10px rgba(0,0,0,0.3)',
-          ] : '0 5px 15px -5px rgba(0,0,0,0.2)',
-        }}
-        transition={{
-          boxShadow: { duration: 4, repeat: Infinity, ease: 'easeInOut' }
-        }}
+    <>
+      <motion.nav
+        className="fixed left-5 top-1/2 z-50 hidden -translate-y-1/2 lg:block"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+        aria-label="Primary"
       >
-        {/* Nav Items */}
-        <div className="flex items-center bg-black/10 dark:bg-black/20 rounded-full px-1 py-1">
-          {navItems.map((item) => (
-            <motion.button
-              key={item.id}
-              onClick={() => setActiveView(item.id)}
-              className={`
-                relative rounded-full text-sm font-medium transition-all duration-300
-                ${isHovered ? 'px-6 py-2' : 'px-4 py-2'}
-                ${activeView === item.id
-                  ? 'text-white dark:text-white'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary'}
-              `}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {activeView === item.id && (
-                <motion.div
-                  layoutId="activeTab"
-                  className="absolute inset-0 bg-gradient-to-r from-primary to-secondary rounded-full shadow-lg shadow-primary/30"
-                  transition={{ type: 'spring', bounce: 0.2, duration: 0.4 }}
+        <div className="flex flex-col gap-4">
+          {navItems.map((item) => {
+            const isActive = activeSection === item.id;
+
+            return (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                onClick={(event) => handleClick(event, item.id)}
+                className="group flex items-center gap-3"
+                aria-current={isActive ? 'page' : undefined}
+              >
+                <span
+                  className={`h-2 w-2 rounded-full transition-all duration-300 ${isActive
+                    ? 'bg-primary shadow-[0_0_16px_rgba(243,112,30,0.85)]'
+                    : 'bg-[#e8d8c9]/24 group-hover:bg-[#e8d8c9]/55'
+                    }`}
                 />
-              )}
-              <span className="relative z-10">{item.label}</span>
-            </motion.button>
-          ))}
+                <motion.span
+                  className={`origin-left font-mono text-[10px] font-bold uppercase tracking-[0.22em] transition-colors ${isActive
+                    ? 'text-[#e8d8c9]'
+                    : 'text-[#e8d8c9]/36 group-hover:text-[#e8d8c9]/72'
+                    }`}
+                  whileHover={{ x: 2, scale: 1.04 }}
+                  transition={{ type: 'spring', stiffness: 350, damping: 22 }}
+                >
+                  {item.label}
+                </motion.span>
+              </a>
+            );
+          })}
         </div>
-      </motion.div>
-    </motion.nav>
+      </motion.nav>
+
+      <motion.nav
+        className="fixed left-0 right-0 top-4 z-50 flex justify-center px-3 lg:hidden"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.45, ease: 'easeOut' }}
+        aria-label="Primary mobile"
+      >
+        <div className="mx-auto flex max-w-[24rem] items-center justify-center gap-1 rounded-full border border-[#e8d8c9]/14 bg-[#181818]/72 p-1.5 shadow-[0_14px_42px_rgba(0,0,0,0.42)] backdrop-blur-xl">
+          {navItems.map((item) => {
+            const isActive = activeSection === item.id;
+
+            return (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                onClick={(event) => handleClick(event, item.id)}
+                className={`rounded-full px-3 py-2 text-xs font-bold transition-colors ${isActive
+                  ? 'bg-primary text-white shadow-[0_0_22px_rgba(243,112,30,0.28)]'
+                  : 'text-[#e8d8c9]/62'
+                  }`}
+              >
+                {item.label}
+              </a>
+            );
+          })}
+        </div>
+      </motion.nav>
+    </>
   );
 };
 

@@ -6,7 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/react"
 function App() {
   return (
     <SpotifyProvider>
-      <div className="relative w-full min-h-screen overflow-x-hidden bg-black">
+      <div className="relative min-h-screen w-full bg-[#181818]">
         <Layer1 />
       </div>
     </SpotifyProvider>

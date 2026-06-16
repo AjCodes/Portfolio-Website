@@ -32,10 +32,10 @@ playwright-report
 .env.local
 .env*.local
 
-# Scripts (local-only utilities)
+# Scripts 
 scripts/
 
-# AI tooling
+# AI 
 .gemini/
 
 # Archives

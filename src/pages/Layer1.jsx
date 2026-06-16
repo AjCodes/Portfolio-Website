@@ -1,108 +1,54 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import FloatingNavbar from '../components/Layer1/FloatingNavbar';
 import HomeView from '../components/Layer1/Views/HomeView';
 import AboutView from '../components/Layer1/Views/AboutView';
 import ProjectsView from '../components/Layer1/Views/ProjectsView';
-import CaseStudyView from '../components/Layer1/Views/CaseStudyView';
-import SpotifyPlayer from '../components/shared/SpotifyPlayer';
 import WavePlayer from '../components/shared/WavePlayer';
-import DotGrid from '../components/shared/DotGrid';
 import LocationTime from '../components/shared/LocationTime';
-import CustomCursor from '../components/shared/CustomCursor';
 
-// Layer1 - Main portfolio page with different views
+const sections = ['home', 'projects', 'about'];
+
 const Layer1 = () => {
-  // Track which view is currently active (home, about, projects, casestudy)
-  const [activeView, setActiveView] = useState('home');
+  const [activeSection, setActiveSection] = useState('home');
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (visible?.target?.id) {
+          setActiveSection(visible.target.id);
+        }
+      },
+      { root: null, threshold: [0.35, 0.55, 0.75] }
+    );
+
+    sections.forEach((id) => {
+      const element = document.getElementById(id);
+      if (element) observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <div className="relative min-h-screen w-screen overflow-y-auto overflow-x-hidden bg-[#060010] text-[hsl(var(--color-text))] transition-colors duration-300">
-      {/* DotGrid Background */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <DotGrid
-          dotSize={2}
-          gap={20}
-          baseColor="#2e1065" // very dark violet
-          activeColor="#8b5cf6" // bright violet
-          proximity={100}
-          shockRadius={200}
-          shockStrength={3}
-          resistance={600}
-          returnDuration={1}
-        />
-      </div>
-
-      {/* Location and Time Widget - bottom right corner */}
+    <div className="tv-shell relative min-h-screen bg-[#181818] text-[hsl(var(--color-text))]">
       <LocationTime />
-
-      {/* Wave Music Player (Top Right) */}
       <WavePlayer />
+      <FloatingNavbar activeSection={activeSection} />
+      <div className="pointer-events-none fixed left-0 right-0 top-0 z-[58] h-3 bg-[#050505] md:h-6" />
+      <div className="pointer-events-none fixed bottom-0 left-0 right-0 z-[58] h-3 bg-[#050505] md:h-6" />
+      <div className="pointer-events-none fixed bottom-0 left-0 top-0 z-[58] w-3 bg-[#050505] md:w-6" />
+      <div className="pointer-events-none fixed bottom-0 right-0 top-0 z-[58] w-3 bg-[#050505] md:w-6" />
+      <div className="tv-frame pointer-events-none fixed inset-3 z-[60] rounded-[2rem] border border-[#e8d8c9]/12 shadow-[inset_0_0_80px_rgba(0,0,0,0.72),0_0_0_1px_rgba(255,255,255,0.04)] md:inset-6" />
+      <div className="tv-vignette pointer-events-none fixed inset-0 z-[59]" />
 
-      {/* Spotify Widget (Bottom Left - Controlled by activeView) */}
-      <SpotifyPlayer activeView={activeView} />
-
-      {/* Navigation bar at the top */}
-      <FloatingNavbar activeView={activeView} setActiveView={setActiveView} />
-
-      {/* Custom Cursor with trail */}
-      <CustomCursor />
-
-      {/* Main content - switches between views with animations */}
-      <main className="relative z-10 h-full w-full pt-20">
-        <AnimatePresence mode="wait">
-          {activeView === 'home' && (
-            <motion.div
-              key="home"
-              className="h-full w-full"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-            >
-              <HomeView setActiveView={setActiveView} />
-            </motion.div>
-          )}
-
-          {activeView === 'about' && (
-            <motion.div
-              key="about"
-              className="h-full w-full overflow-hidden"
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-            >
-              <AboutView />
-            </motion.div>
-          )}
-
-          {activeView === 'projects' && (
-            <motion.div
-              key="projects"
-              className="h-full w-full"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -30 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-            >
-              <ProjectsView />
-            </motion.div>
-          )}
-
-          {activeView === 'casestudy' && (
-            <motion.div
-              key="casestudy"
-              className="h-full w-full"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.05 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-            >
-              <CaseStudyView />
-            </motion.div>
-          )}
-        </AnimatePresence>
+      <main className="tv-content relative z-10 w-full overflow-x-hidden">
+        <HomeView />
+        <ProjectsView />
+        <AboutView />
       </main>
     </div>
   );

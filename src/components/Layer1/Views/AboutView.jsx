@@ -1,381 +1,350 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
+import SpotifyPlayer from '../../shared/SpotifyPlayer';
 
-// Locations for the world map
 const locations = [
     {
         id: 'yemen',
         name: 'Yemen',
         x: 61,
         y: 55,
-        headline: 'Origins',
-        timeline: '0 – 4 yrs',
-        description: 'Where i was born and where everything started.',
-        details: 'Where i was born and where everything started.',
-        coordinates: '15.3°N / 44.2°E'
+        timeline: '0-4',
+        details: 'Where I was born and where the story started.',
+        coordinates: '15.3 N / 44.2 E'
     },
     {
         id: 'malaysia',
         name: 'Malaysia',
         x: 78,
         y: 58,
-        headline: 'Growth Phase',
-        timeline: '5 – 27 yrs',
-        description: 'Where i grew up and became who i am.',
-        details: 'Where i grew up and became who i am.',
-        coordinates: '3.1°N / 101.7°E'
+        timeline: '5-27',
+        details: 'The place that feels like home, and where most of my personality was shaped.',
+        coordinates: '3.1 N / 101.7 E'
     },
     {
         id: 'netherlands',
         name: 'Netherlands',
         x: 49,
         y: 36,
-        headline: 'Current Base',
-        timeline: '28 yrs – Present',
-        description: "Where i'm putting it all together.",
-        details: "Where i'm putting it all together.",
-        coordinates: '52.4°N / 4.9°E'
+        timeline: 'Now',
+        details: "Where I'm building the next chapter through design, code, and product work.",
+        coordinates: '52.4 N / 4.9 E'
     }
 ];
 
-const LikeButton = () => {
+const techGroups = [
+    ['JavaScript', 'React', 'Tailwind CSS', 'TypeScript', 'HTML/CSS'],
+    ['Node.js', 'Express', 'Firebase', 'Supabase', 'REST APIs'],
+    ['Figma', 'Photoshop', 'Aseprite', 'Notion', 'GitHub']
+];
+
+const icons = {
+    email: (
+        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
+            <path d="M4 6.5h16v11H4z" stroke="currentColor" strokeWidth="1.8" />
+            <path d="m5 7 7 6 7-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    ),
+    github: (
+        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
+            <path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.18-3.37-1.18-.45-1.15-1.1-1.46-1.1-1.46-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.9.83.1-.65.35-1.08.64-1.33-2.22-.25-4.55-1.1-4.55-4.93 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.55 9.55 0 0 1 12 6.04c.85 0 1.7.11 2.5.33 1.9-1.29 2.74-1.02 2.74-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.86v2.75c0 .26.18.58.69.48A10 10 0 0 0 12 2Z" />
+        </svg>
+    ),
+    instagram: (
+        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
+            <rect x="4" y="4" width="16" height="16" rx="4.5" stroke="currentColor" strokeWidth="1.8" />
+            <circle cx="12" cy="12" r="3.4" stroke="currentColor" strokeWidth="1.8" />
+            <circle cx="17" cy="7" r="1" fill="currentColor" />
+        </svg>
+    )
+};
+
+const contactLinks = [
+    { label: 'Email', value: 'ajabood7788@gmail.com', href: 'mailto:ajabood7788@gmail.com', icon: icons.email },
+    { label: 'GitHub', value: '@AjCodes', href: 'https://github.com/AjCodes', icon: icons.github },
+    { label: 'Instagram', value: '@aboodmadridista', href: 'https://www.instagram.com/aboodmadridista/', icon: icons.instagram }
+];
+
+const HeartButton = () => {
     const [likes, setLikes] = useState(() => {
         const saved = localStorage.getItem('portfolio_likes');
         return saved ? parseInt(saved, 10) : 142;
     });
-    // Toggle for animation state
-    const [animState, setAnimState] = useState(false);
+    const [liked, setLiked] = useState(false);
 
     const handleLike = () => {
-        const newLikes = likes + 1;
-        setLikes(newLikes);
-        localStorage.setItem('portfolio_likes', newLikes.toString());
-
-        // Trigger generic click animation
-        setAnimState(true);
-        setTimeout(() => setAnimState(false), 200);
+        const next = likes + 1;
+        setLikes(next);
+        setLiked(true);
+        localStorage.setItem('portfolio_likes', String(next));
     };
 
     return (
         <motion.button
+            type="button"
             onClick={handleLike}
-            className="flex-1 h-10 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-red-500/50 text-gray-400 hover:text-red-400 transition-all flex items-center justify-center gap-2 group relative overflow-hidden active:scale-95"
-            whileTap={{ scale: 0.9 }}
+            className={`group relative inline-flex min-h-12 items-center justify-center gap-3 overflow-hidden rounded-2xl border px-6 py-3 text-sm font-bold transition-colors ${liked
+                ? 'border-primary/55 bg-primary/14 text-white'
+                : 'border-[#e8d8c9]/14 bg-[#e8d8c9]/6 text-[#e8d8c9]/75 hover:border-primary/45 hover:text-white'
+                }`}
+            whileTap={{ scale: 0.96 }}
+            animate={liked ? { boxShadow: '0 0 34px rgba(243,112,30,0.24)' } : { boxShadow: '0 0 0 rgba(243,112,30,0)' }}
+            aria-live="polite"
         >
-            <motion.svg
-                className={`w-5 h-5 transition-colors ${animState ? 'text-red-500 fill-red-500' : 'fill-none'}`}
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="2"
-                animate={{ scale: animState ? [1, 1.4, 1] : 1 }}
-                transition={{ duration: 0.2 }}
+            <motion.span
+                className="text-2xl leading-none text-primary"
+                animate={liked ? { scale: [1, 1.35, 1] } : { scale: 1 }}
+                transition={{ duration: 0.32 }}
             >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-            </motion.svg>
-            <span className="text-xs font-semibold font-mono">{likes}</span>
+                {liked ? '♥' : '♡'}
+            </motion.span>
+            <span>{likes}</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#e8d8c9]/45">
+                {liked ? 'Thanks' : 'Appreciate'}
+            </span>
         </motion.button>
     );
 };
 
-const AboutView = () => {
+const JourneyMap = () => {
     const [activeLocation, setActiveLocation] = useState(null);
-
     const activePlace = useMemo(
-        () => locations.find(place => place.id === activeLocation),
+        () => locations.find((place) => place.id === activeLocation),
         [activeLocation]
     );
 
     return (
-        <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-2 px-6 pt-6 pb-4 max-w-7xl mx-auto relative z-20">
+        <div className="relative min-h-[19rem] overflow-hidden rounded-[1.5rem] border border-[#e8d8c9]/10 bg-[#080914] shadow-[0_24px_80px_rgba(0,0,0,0.38)]">
+            <div
+                className="absolute inset-0 opacity-75"
+                style={{
+                    backgroundImage: "url('https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg')",
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center 60%',
+                    filter: 'invert(1) hue-rotate(180deg) brightness(0.62) contrast(1.25)'
+                }}
+            />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0,rgba(8,9,20,0.58)_56%,#080914_100%)]" />
 
-            {/* Left Column - Bio, Socials, Contact (5 Cols) */}
-            <div className="md:col-span-5 flex flex-col gap-2">
-                {/* About Text Card */}
-                <motion.div
-                    className="glass-card p-4 rounded-[20px] border border-white/5 bg-black/20 backdrop-blur-xl"
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.15 }}
-                >
-                    <div className="mb-3">
-                        <h2 className="text-2xl md:text-3xl font-bold text-gradient-premium leading-tight">I build things that stick with people.</h2>
+            <div className="relative z-10 flex h-full min-h-[19rem] flex-col justify-between p-5">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <p className="font-mono text-xs font-bold uppercase tracking-[0.24em] text-primary">My journey</p>
                     </div>
-                    <div className="space-y-2 text-gray-300 leading-relaxed text-sm">
-                        <p>
-                            i've always been drawn to mixing ideas from different worlds. psychology, design, tech, whatever it takes to make something feel right.
-                        </p>
-                        <p>
-                            i'm also detailed to a fault. the kind of person who will spend way too long on something most people won't even notice. but those small things add up.
-                        </p>
-                        <p>
-                            lately i've been obsessed with automating the boring parts of my workflow. frees up space for the work that actually matters.
-                        </p>
+                    <div className="rounded-full border border-primary/20 bg-[#181818]/70 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-[#e8d8c9]/50">
+                        Hover over dots
                     </div>
+                </div>
 
-                    <div className="mt-4 pt-3 border-t border-white/5">
-                        <p className="text-gray-400 text-sm font-mono italic">
-                            "Learning by doing, one project at a time."
-                        </p>
-                    </div>
-                </motion.div>
+                <div className="w-full max-w-xs">
+                    <AnimatePresence mode="wait">
+                        {activePlace && (
+                            <motion.div
+                                key={activePlace.id}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 10 }}
+                                className="rounded-2xl border border-primary/28 bg-[#151520]/90 p-4 shadow-[0_0_30px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+                            >
+                                <div className="mb-1 flex items-center justify-between gap-2">
+                                    <h3 className="text-base font-bold text-white">{activePlace.name}</h3>
+                                    <span className="font-mono text-[10px] text-primary">{activePlace.coordinates}</span>
+                                </div>
+                                <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-widest text-[#e8d8c9]/38">{activePlace.timeline}</p>
+                                <p className="border-t border-white/5 pt-2 text-xs leading-relaxed text-[#e8d8c9]/68">{activePlace.details}</p>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
 
-
-                {/* Let's Connect Card - Now includes social icons */}
-                <motion.div
-                    className="glass-card p-5 rounded-[24px] border border-white/5 bg-black/20 backdrop-blur-xl flex flex-col gap-4"
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.4 }}
-                >
-                    <div className="flex justify-between items-center">
-                        <h3 className="text-lg font-bold text-white">Let's Connect</h3>
-                        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/20 backdrop-blur-md shrink-0">
-                            <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                            </span>
-                            <span className="text-[10px] font-bold text-green-400 tracking-wide uppercase">Available for work</span>
-                        </div>
-                    </div>
-
-                    {/* Social Icons Row */}
-                    <div className="flex gap-2">
-                        {/* GitHub */}
-                        <a href="https://github.com/AjCodes" target="_blank" rel="noopener noreferrer"
-                            className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-primary/50 text-gray-400 hover:text-white transition-all flex items-center justify-center group">
-                            <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
-                                <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-                            </svg>
-                        </a>
-
-                        {/* Instagram */}
-                        <a href="https://www.instagram.com/aboodmadridista/" target="_blank" rel="noopener noreferrer"
-                            className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#E1306C]/50 text-gray-400 hover:text-white transition-all flex items-center justify-center group">
-                            <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
-                                <path fillRule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.451 2.535c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.821-.049.975-.045 1.504-.207 1.857-.344.467-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.812-.045-.975-.207-1.504-.344-1.857a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clipRule="evenodd" />
-                            </svg>
-                        </a>
-
-                        {/* LinkedIn */}
-                        <a href="#" target="_blank" rel="noopener noreferrer"
-                            className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#0077b5]/50 text-gray-400 hover:text-white transition-all flex items-center justify-center group">
-                            <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                            </svg>
-                        </a>
-
-                        {/* Like Counter */}
-                        <LikeButton />
-                    </div>
-
-                    <p className="text-sm text-gray-400 leading-relaxed">
-                        I'm always looking for new challenges. If you like my work, consider supporting so I can keep building cool open-source products!
-                    </p>
-
-                    <a href="https://buymeacoffee.com/ajcodex" target="_blank" rel="noopener noreferrer"
-                        className="w-full h-12 rounded-xl bg-gradient-to-r from-primary to-secondary hover:from-primary/80 hover:to-secondary/80 text-white font-bold tracking-wide transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:shadow-primary/40 active:scale-95"
-                    >
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M17 8h1a4 4 0 110 8h-1M3 8h14v9a4 4 0 01-4 4H7a4 4 0 01-4-4V8zm0 0V6a2 2 0 012-2h10a2 2 0 012 2v2" />
-                        </svg>
-                        Buy Me a Coffee
-                    </a>
-                </motion.div>
-            </div>
-
-            {/* Right Column - Map (7 Cols) - Tech Stack Removed from here */}
-            <div className="md:col-span-7 h-[500px] md:h-auto">
-                <motion.div
-                    className="h-full rounded-[24px] border border-white/5 relative group shadow-2xl bg-[#0B0B15] overflow-hidden"
-                    initial={{ x: 20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.2 }}
-                >
-                    <div className="absolute inset-0"
-                        style={{
-                            backgroundImage: `url('https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg')`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center 60%',
-                            filter: 'invert(1) hue-rotate(180deg) brightness(0.7) contrast(1.2)'
-                        }}
+                <svg className="absolute inset-0 z-0 h-full w-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="journeyLine" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stopColor="#f3701e" stopOpacity="0.22" />
+                            <stop offset="100%" stopColor="#f3701e" stopOpacity="0.82" />
+                        </linearGradient>
+                        <filter id="journeyGlow">
+                            <feGaussianBlur stdDeviation="0.8" result="coloredBlur" />
+                            <feMerge><feMergeNode in="coloredBlur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                        </filter>
+                    </defs>
+                    <path
+                        d={`M ${locations[0].x} ${locations[0].y} Q ${(locations[0].x + locations[1].x) / 2} ${Math.min(locations[0].y, locations[1].y) - 15} ${locations[1].x} ${locations[1].y}`}
+                        fill="none"
+                        stroke="url(#journeyLine)"
+                        strokeDasharray="3 3"
+                        strokeWidth="0.4"
+                        opacity="0.6"
                     />
+                    <path
+                        d={`M ${locations[1].x} ${locations[1].y} Q ${(locations[1].x + locations[2].x) / 2} ${Math.min(locations[1].y, locations[2].y) - 25} ${locations[2].x} ${locations[2].y}`}
+                        fill="none"
+                        stroke="url(#journeyLine)"
+                        strokeDasharray="3 3"
+                        strokeWidth="0.4"
+                        opacity="0.6"
+                    />
+                    <path
+                        id="combinedJourneyPath"
+                        d={`M ${locations[0].x} ${locations[0].y} Q ${(locations[0].x + locations[1].x) / 2} ${Math.min(locations[0].y, locations[1].y) - 15} ${locations[1].x} ${locations[1].y} Q ${(locations[1].x + locations[2].x) / 2} ${Math.min(locations[1].y, locations[2].y) - 25} ${locations[2].x} ${locations[2].y}`}
+                        fill="none"
+                        stroke="none"
+                    />
+                    <circle r="1" fill="#f3701e" filter="url(#journeyGlow)">
+                        <animateMotion dur="4s" repeatCount="indefinite" calcMode="linear">
+                            <mpath href="#combinedJourneyPath" />
+                        </animateMotion>
+                    </circle>
+                </svg>
 
-                    <div className="absolute inset-0 bg-gradient-radial from-transparent via-[#0B0B15]/50 to-[#0B0B15]" />
-
-                    <div className="relative z-10 h-full w-full p-6 flex flex-col justify-between">
-                        <div className="flex items-center justify-between">
-                            <h3 className="text-sm font-bold tracking-widest text-primary uppercase drop-shadow-[0_0_10px_rgba(249,115,22,0.5)]">
-                                My Journey
-                            </h3>
-                            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1A1A2E] border border-primary/20">
-                                <span className="relative flex h-2 w-2">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-                                </span>
-                                <p className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Hover over dots to explore</p>
-                            </div>
-                        </div>
-
-                        <div className="w-[280px]">
-                            <AnimatePresence mode="wait">
-                                {activePlace && (
-                                    <motion.div
-                                        key={activePlace.id}
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: 10 }}
-                                        className="bg-[#151520]/90 backdrop-blur-xl border border-primary/30 rounded-xl p-4 shadow-[0_0_30px_rgba(0,0,0,0.5)]"
-                                    >
-                                        <div className="flex items-center justify-between mb-1">
-                                            <h3 className="text-base font-bold text-white">{activePlace.name}</h3>
-                                            <span className="text-[10px] text-primary font-mono">{activePlace.coordinates}</span>
-                                        </div>
-                                        <p className="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-2">{activePlace.timeline}</p>
-                                        <p className="text-xs text-gray-300 leading-relaxed border-t border-white/5 pt-2">{activePlace.details}</p>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
-
-                        <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 100 100" preserveAspectRatio="none">
-                            <defs>
-                                <linearGradient id="gradientLine" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop offset="0%" stopColor="hsl(15, 85%, 55%)" stopOpacity="0.2" />
-                                    <stop offset="100%" stopColor="hsl(15, 85%, 55%)" stopOpacity="0.8" />
-                                </linearGradient>
-                                <filter id="glow">
-                                    <feGaussianBlur stdDeviation="0.8" result="coloredBlur" />
-                                    <feMerge><feMergeNode in="coloredBlur" /><feMergeNode in="SourceGraphic" /></feMerge>
-                                </filter>
-                            </defs>
-
-                            <path
-                                id="path1"
-                                d={`M ${locations[0].x} ${locations[0].y} Q ${(locations[0].x + locations[1].x) / 2} ${Math.min(locations[0].y, locations[1].y) - 15} ${locations[1].x} ${locations[1].y}`}
-                                fill="none" stroke="url(#gradientLine)" strokeWidth="0.4" strokeDasharray="3 3" opacity="0.6"
-                            />
-                            <path
-                                id="path2"
-                                d={`M ${locations[1].x} ${locations[1].y} Q ${(locations[1].x + locations[2].x) / 2} ${Math.min(locations[1].y, locations[2].y) - 25} ${locations[2].x} ${locations[2].y}`}
-                                fill="none" stroke="url(#gradientLine)" strokeWidth="0.4" strokeDasharray="3 3" opacity="0.6"
-                            />
-
-                            {/* Hidden Combined Path for Animation */}
-                            <path
-                                id="combinedPath"
-                                d={`M ${locations[0].x} ${locations[0].y} Q ${(locations[0].x + locations[1].x) / 2} ${Math.min(locations[0].y, locations[1].y) - 15} ${locations[1].x} ${locations[1].y} Q ${(locations[1].x + locations[2].x) / 2} ${Math.min(locations[1].y, locations[2].y) - 25} ${locations[2].x} ${locations[2].y}`}
-                                fill="none" stroke="none"
-                            />
-
-                            <circle r="1" fill="hsl(15, 85%, 55%)" filter="url(#glow)">
-                                <animateMotion dur="4s" repeatCount="indefinite" begin="0s" calcMode="linear">
-                                    <mpath href="#combinedPath" />
-                                </animateMotion>
-                            </circle>
-                        </svg>
-
-                        {locations.map((place) => (
-                            <div key={place.id} className="absolute" style={{ left: `${place.x}%`, top: `${place.y}%` }}>
-                                <motion.button
-                                    type="button"
-                                    onMouseEnter={() => setActiveLocation(place.id)}
-                                    onMouseLeave={() => setActiveLocation(null)}
-                                    className="group relative flex items-center justify-center w-8 h-8 -ml-4 -mt-4 cursor-pointer"
-                                    whileHover={{ scale: 1.1 }}
-                                >
-                                    <span className="absolute inset-0 rounded-full bg-primary opacity-20 animate-ping group-hover:opacity-40" />
-                                    <div className="w-3 h-3 bg-[#0B0B15] rounded-full border-2 border-primary shadow-[0_0_15px_#F97316] relative z-10 group-hover:bg-primary transition-colors" />
-                                    {activeLocation === place.id && (
-                                        <motion.div
-                                            className="absolute top-1/2 left-1/2 w-[100px] h-[1px] bg-gradient-to-r from-primary to-transparent origin-left -z-10"
-                                            initial={{ scaleX: 0 }}
-                                            animate={{ scaleX: 1, rotate: 135 }}
-                                        />
-                                    )}
-                                </motion.button>
-                            </div>
-                        ))}
+                {locations.map((place) => (
+                    <div key={place.id} className="absolute z-20" style={{ left: `${place.x}%`, top: `${place.y}%` }}>
+                        <motion.button
+                            type="button"
+                            onMouseEnter={() => setActiveLocation(place.id)}
+                            onMouseLeave={() => setActiveLocation(null)}
+                            onFocus={() => setActiveLocation(place.id)}
+                            onBlur={() => setActiveLocation(null)}
+                            className="group relative flex h-8 w-8 -ml-4 -mt-4 items-center justify-center"
+                            whileHover={{ scale: 1.1 }}
+                            aria-label={place.name}
+                        >
+                            <span className="absolute inset-0 rounded-full bg-primary opacity-20 animate-ping group-hover:opacity-40" />
+                            <span className="relative z-10 h-3 w-3 rounded-full border-2 border-primary bg-[#080914] shadow-[0_0_15px_rgba(243,112,30,0.9)] transition-colors group-hover:bg-primary" />
+                        </motion.button>
                     </div>
-                </motion.div>
+                ))}
             </div>
+        </div>
+    );
+};
 
-            {/* Bottom Row - Tech Stack (12 Cols - Expanded Horizontal) */}
-            <motion.div
-                className="md:col-span-12 glass-card p-4 rounded-[20px] border border-white/10 bg-black/30 backdrop-blur-xl"
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.35 }}
-            >
-                <div className="flex items-center gap-2 mb-4">
-                    <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                    </svg>
-                    <span className="text-xs font-bold tracking-widest text-white uppercase">Tech Stack</span>
+const AboutView = () => {
+    return (
+        <section id="about" className="relative min-h-screen overflow-hidden bg-[#181818] px-6 py-14 sm:px-10 lg:pl-44 lg:pr-10">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_24%,rgba(243,112,30,0.12),transparent_24%),radial-gradient(circle_at_84%_40%,rgba(75,96,127,0.22),transparent_30%)]" />
+            <div className="relative z-10 mx-auto grid max-w-7xl gap-5 lg:grid-cols-[0.82fr_1.18fr]">
+                <div className="grid gap-5">
+                    <motion.div
+                        className="rounded-[1.5rem] border border-[#e8d8c9]/10 bg-[#181818]/82 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.34)] backdrop-blur-xl sm:p-6"
+                        initial={{ opacity: 0, y: 24 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.3 }}
+                    >
+                        <h2 className="font-display text-3xl font-bold leading-tight text-[#e8d8c9] sm:text-[2.35rem]">
+                            <span className="text-primary">I build things</span> that stick with people.
+                        </h2>
+                        <div className="mt-4 space-y-3 text-sm leading-relaxed text-[#e8d8c9]/72">
+                            <p>
+                                I&apos;ve always been drawn to mixing ideas from different worlds: psychology, design, tech, whatever it takes to make something feel right.
+                            </p>
+                            <p>
+                                I&apos;m also detailed to a fault. The kind of person who will spend way too long on something most people won&apos;t even notice. But those small things add up.
+                            </p>
+                            <p>
+                                Lately I&apos;ve been obsessed with automating the boring parts of my workflow. It frees up space for the work that actually matters.
+                            </p>
+                        </div>
+
+                        <div className="mt-5 border-t border-[#e8d8c9]/10 pt-4">
+                            <p className="font-mono text-sm italic tracking-[0.08em] text-[#e8d8c9]/55">
+                                &quot;Learning by doing, one project at a time.&quot;
+                            </p>
+                        </div>
+
+                        <div className="mt-4">
+                            <SpotifyPlayer inline />
+                        </div>
+                    </motion.div>
+
+                    <motion.div
+                        className="rounded-[1.5rem] border border-[#e8d8c9]/10 bg-[#181818]/82 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.34)] backdrop-blur-xl"
+                        initial={{ opacity: 0, y: 24 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.25 }}
+                    >
+                        <div className="mb-4 flex items-center gap-2">
+                            <span className="font-mono text-xs font-bold uppercase tracking-[0.24em] text-primary">Tech stack</span>
+                        </div>
+                        <div className="grid gap-3">
+                            {techGroups.map((group, index) => (
+                                <div key={index} className="flex flex-wrap gap-2">
+                                    {group.map((tech) => (
+                                        <span key={tech} className="rounded-lg border border-[#e8d8c9]/10 bg-[#e8d8c9]/5 px-3 py-1.5 text-xs font-semibold text-[#e8d8c9]/70">
+                                            {tech}
+                                        </span>
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                    </motion.div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                    {/* Frontend */}
-                    <div>
-                        <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Frontend</p>
-                        <div className="flex flex-wrap gap-1.5">
-                            {['JavaScript', 'HTML/CSS', 'Vite', 'React', 'Tailwind CSS', 'TypeScript'].map((tech) => (
-                                <span key={tech} className="px-2.5 py-1 text-[11px] font-medium text-gray-300 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 hover:border-primary/30 transition-colors cursor-default">
-                                    {tech}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
+                <div className="grid gap-5">
+                    <motion.div
+                        initial={{ opacity: 0, y: 24 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.25 }}
+                        transition={{ delay: 0.08 }}
+                    >
+                        <JourneyMap />
+                    </motion.div>
 
-                    {/* Backend */}
-                    <div>
-                        <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Backend</p>
-                        <div className="flex flex-wrap gap-1.5">
-                            {['Node.js', 'Express', 'Python', 'REST APIs', 'Supabase', 'Firebase', 'MySQL'].map((tech) => (
-                                <span key={tech} className="px-2.5 py-1 text-[11px] font-medium text-gray-300 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 hover:border-primary/30 transition-colors cursor-default">
-                                    {tech}
+                    <motion.div
+                        className="rounded-[1.5rem] border border-[#e8d8c9]/10 bg-[#181818]/82 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.34)] backdrop-blur-xl"
+                        initial={{ opacity: 0, y: 24 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.25 }}
+                    >
+                    <div className="grid gap-5 lg:grid-cols-[0.76fr_1.24fr]">
+                        <div>
+                            <div className="flex flex-wrap items-center gap-3">
+                                <p className="font-display text-2xl font-bold leading-tight text-[#e8d8c9] sm:text-3xl">
+                                    Let&apos;s Connect
+                                </p>
+                                <span className="inline-flex items-center gap-2 rounded-full border border-green-400/25 bg-green-400/10 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-green-300 shadow-[0_0_24px_rgba(74,222,128,0.08)]">
+                                    <span className="h-2.5 w-2.5 rounded-full bg-green-400 shadow-[0_0_14px_rgba(74,222,128,0.75)]" />
+                                    Available for work
                                 </span>
-                            ))}
+                            </div>
+                            <p className="mt-3 max-w-xl text-sm leading-relaxed text-[#e8d8c9]/66">
+                                I&apos;m always looking for new challenges. If you like my work, consider supporting so I can keep building cool open-source products.
+                            </p>
+                            <div className="mt-4 flex flex-wrap gap-3">
+                                <a href="https://buymeacoffee.com/ajcodex" target="_blank" rel="noopener noreferrer" className="rounded-full bg-primary px-4 py-2.5 text-sm font-bold text-white shadow-[0_14px_34px_rgba(243,112,30,0.22)] transition-transform hover:-translate-y-0.5">
+                                    Buy Me a Coffee
+                                </a>
+                            </div>
                         </div>
-                    </div>
 
-                    {/* Tools */}
-                    <div>
-                        <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Tools</p>
-                        <div className="flex flex-wrap gap-1.5">
-                            {['Git', 'GitHub', 'Bun', 'Notion', 'Terminal/CLI'].map((tech) => (
-                                <span key={tech} className="px-2.5 py-1 text-[11px] font-medium text-gray-300 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 hover:border-primary/30 transition-colors cursor-default">
-                                    {tech}
-                                </span>
+                        <div className="grid gap-3">
+                            {contactLinks.map((link) => (
+                                <a
+                                    key={link.label}
+                                    href={link.href}
+                                    target={link.href.startsWith('http') ? '_blank' : undefined}
+                                    rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                                    className="group flex items-center justify-between gap-4 rounded-2xl border border-[#e8d8c9]/10 bg-[#e8d8c9]/5 px-4 py-2.5 transition-colors hover:border-primary/45 hover:bg-primary/10"
+                                >
+                                    <span className="flex min-w-0 items-center gap-3">
+                                        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-[#e8d8c9]/10 bg-[#080808]/55 text-[#e8d8c9]/72 transition-colors group-hover:border-primary/40 group-hover:text-primary">
+                                            {link.icon}
+                                        </span>
+                                        <span className="min-w-0">
+                                            <span className="block font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-primary">{link.label}</span>
+                                            <span className="mt-1 block truncate text-sm font-semibold text-[#e8d8c9]">{link.value}</span>
+                                        </span>
+                                    </span>
+                                    <span className="text-[#e8d8c9]/35 transition-transform group-hover:translate-x-1 group-hover:text-primary">→</span>
+                                </a>
                             ))}
+                            <HeartButton />
                         </div>
                     </div>
-
-                    {/* Design */}
-                    <div>
-                        <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Design</p>
-                        <div className="flex flex-wrap gap-1.5">
-                            {['Figma', 'Photoshop', 'Aseprite', 'Canva'].map((tech) => (
-                                <span key={tech} className="px-2.5 py-1 text-[11px] font-medium text-gray-300 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 hover:border-primary/30 transition-colors cursor-default">
-                                    {tech}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Cloud & DevOps */}
-                    <div>
-                        <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Cloud & DevOps</p>
-                        <div className="flex flex-wrap gap-1.5">
-                            {['Vercel', 'Docker', 'Railway'].map((tech) => (
-                                <span key={tech} className="px-2.5 py-1 text-[11px] font-medium text-gray-300 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 hover:border-primary/30 transition-colors cursor-default">
-                                    {tech}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
+                    </motion.div>
                 </div>
-            </motion.div>
-        </div >
+            </div>
+        </section>
     );
 };
 

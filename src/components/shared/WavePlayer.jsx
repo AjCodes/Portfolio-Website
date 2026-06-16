@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const WavePlayer = () => {
+const WavePlayer = ({ onPlayingChange }) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const audioRef = useRef(null);
@@ -11,12 +11,14 @@ const WavePlayer = () => {
 
     const togglePlay = () => {
         if (audioRef.current) {
+            const nextPlaying = !isPlaying;
             if (isPlaying) {
                 audioRef.current.pause();
             } else {
                 audioRef.current.play().catch(e => console.error("Audio play failed:", e));
             }
-            setIsPlaying(!isPlaying);
+            setIsPlaying(nextPlaying);
+            onPlayingChange?.(nextPlaying);
         }
     };
 
@@ -33,7 +35,7 @@ const WavePlayer = () => {
             <audio ref={audioRef} src={audioSrc} />
 
             <motion.div
-                className="fixed top-6 right-6 z-50 flex items-center justify-end cursor-pointer group"
+                className="fixed right-12 top-12 z-[70] flex items-center justify-end cursor-pointer group max-sm:right-7 max-sm:top-20"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
                 onClick={togglePlay}
