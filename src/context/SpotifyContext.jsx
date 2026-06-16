@@ -60,7 +60,7 @@ export const SpotifyProvider = ({ children }) => {
 
     useEffect(() => {
         fetchSpotifyData();
-        const interval = setInterval(fetchSpotifyData, 5 * 60 * 1000);
+        const interval = setInterval(fetchSpotifyData, 30 * 1000);
         return () => clearInterval(interval);
     }, []);
 
