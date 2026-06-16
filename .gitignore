@@ -29,6 +29,14 @@ playwright-report
 
 # Environment
 .env
+.env.local
+.env*.local
+
+# Scripts (local-only utilities)
+scripts/
+
+# AI tooling
+.gemini/
 
 # Archives
 *.rar
