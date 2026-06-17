@@ -5,26 +5,22 @@ const bootTicks = Array.from({ length: 18 }, (_, index) => index);
 const StaticTvLoader = () => {
     return (
         <motion.div
-            className="pointer-events-none fixed inset-0 z-[90] bg-[#020202] p-5 md:p-8"
+            className="pointer-events-none fixed inset-0 z-[90] bg-[#020202] p-5 will-change-transform md:p-8"
             initial={{ opacity: 1, scale: 1 }}
             exit={{
                 opacity: 0,
-                scale: 0.27,
-                x: '13.5vw',
-                y: '-0.8vh',
-                filter: 'blur(5px)',
+                scale: 1.012,
                 transition: {
-                    duration: 1.18,
-                    ease: [0.76, 0, 0.24, 1],
-                    opacity: { duration: 0.18, delay: 0.94, ease: 'linear' },
-                    filter: { duration: 0.22, delay: 0.9, ease: 'linear' }
+                    duration: 0.72,
+                    ease: [0.32, 0.72, 0, 1],
+                    opacity: { duration: 0.48, delay: 0.1, ease: 'linear' }
                 }
             }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
             aria-hidden="true"
-            style={{ transformOrigin: '70% 48%' }}
+            style={{ transformOrigin: '50% 50%' }}
         >
-            <div className="relative h-full overflow-hidden rounded-[2.4rem] border border-[#d7c8b8]/24 bg-[#050505] shadow-[inset_0_0_150px_rgba(0,0,0,0.95),0_0_0_8px_rgba(0,0,0,0.72)]">
+            <div className="relative h-full overflow-hidden rounded-[2.4rem] border border-[#d7c8b8]/24 bg-[#050505] shadow-[inset_0_0_150px_rgba(0,0,0,0.95),0_0_0_8px_rgba(0,0,0,0.72)] [transform:translateZ(0)]">
                 <div className="boot-blue-screen absolute inset-[3.2%] overflow-hidden rounded-[7%/11%] border border-[#090b2c]/80 bg-[#25298f] shadow-[inset_0_0_90px_rgba(0,0,0,0.42),inset_0_0_12px_rgba(255,255,255,0.12)]">
                     <div className="boot-static absolute inset-0 opacity-30" />
                     <div className="boot-crt-lines absolute inset-0" />

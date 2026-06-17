@@ -10,14 +10,13 @@ const HomeView = ({ isReady = true }) => {
         <section id="home" className="relative flex min-h-screen overflow-hidden border-b border-[#e8d8c9]/8">
             <div className="pointer-events-none absolute inset-0 bg-[#151515]" />
 
-            <motion.div
-                className="relative z-10 grid w-full items-center gap-10 px-6 py-28 sm:px-10 lg:grid-cols-[0.52fr_0.48fr] lg:pl-48 lg:pr-16"
-                initial={false}
-                animate={isReady ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: 22, filter: 'blur(10px)' }}
-                transition={{ duration: 0.78, delay: isReady ? 0 : 0, ease: [0.16, 1, 0.3, 1] }}
-            >
+            <div className="relative z-10 grid w-full items-center gap-10 px-6 py-28 sm:px-10 lg:grid-cols-[0.52fr_0.48fr] lg:pl-48 lg:pr-16">
                 {/* Hero text — staggered reveals */}
-                <div>
+                <motion.div
+                    initial={false}
+                    animate={isReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+                    transition={{ duration: 0.78, ease: [0.22, 1, 0.36, 1] }}
+                >
                     <ScrollReveal preset="fade-left" delay={0} duration={0.65}>
                         <p className="font-display text-2xl font-semibold text-[#dce5f2] sm:text-4xl">
                             Hey, I&apos;m AJ.
@@ -58,16 +57,15 @@ const HomeView = ({ isReady = true }) => {
                             About Me
                         </a>
                     </ScrollReveal>
-                </div>
+                </motion.div>
 
                 {/* Decorative screen — scroll parallax + mouse parallax */}
                 <motion.div
                     className="relative hidden min-h-[34rem] lg:block"
                     style={{ y: screenY, scale: screenScale }}
-                    initial={{ opacity: 0, rotateX: 8 }}
-                    whileInView={{ opacity: 1, rotateX: 0 }}
-                    viewport={{ once: true, amount: 0.45 }}
-                    transition={{ duration: 0.8, ease: 'easeOut' }}
+                    initial={false}
+                    animate={{ opacity: 1, rotateX: 0 }}
+                    transition={{ duration: 0.3, ease: 'linear' }}
                     aria-hidden="true"
                 >
                     <div
@@ -117,7 +115,7 @@ const HomeView = ({ isReady = true }) => {
                         </svg>
                     </div>
                 </motion.div>
-            </motion.div>
+            </div>
 
             {/* Scroll indicator */}
             <ScrollReveal preset="fade-up" delay={1.0} duration={0.6}>

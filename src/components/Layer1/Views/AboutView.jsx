@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import SpotifyPlayer from '../../shared/SpotifyPlayer';
 import ScrollReveal from '../../../components/shared/ScrollReveal';
 
@@ -69,15 +69,61 @@ const contactLinks = [
 const HeartButton = () => {
     const [likes, setLikes] = useState(() => {
         const saved = localStorage.getItem('portfolio_likes');
-        return saved ? parseInt(saved, 10) : 142;
+        return saved ? parseInt(saved, 10) : 145;
     });
     const [liked, setLiked] = useState(false);
+    const [isSyncing, setIsSyncing] = useState(false);
 
-    const handleLike = () => {
+    useEffect(() => {
+        let isMounted = true;
+
+        const loadLikes = async () => {
+            try {
+                const response = await fetch('/api/likes', { cache: 'no-store' });
+                if (!response.ok) return;
+
+                const data = await response.json();
+                if (isMounted && Number.isFinite(data.count)) {
+                    setLikes(data.count);
+                    localStorage.setItem('portfolio_likes', String(data.count));
+                }
+            } catch {
+                // Local Vite dev does not run Vercel functions; keep local fallback.
+            }
+        };
+
+        loadLikes();
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+    const handleLike = async () => {
         const next = likes + 1;
         setLikes(next);
         setLiked(true);
         localStorage.setItem('portfolio_likes', String(next));
+        setIsSyncing(true);
+
+        try {
+            const response = await fetch('/api/likes', {
+                method: 'POST',
+                headers: { Accept: 'application/json' },
+            });
+
+            if (!response.ok) return;
+
+            const data = await response.json();
+            if (Number.isFinite(data.count)) {
+                setLikes(data.count);
+                localStorage.setItem('portfolio_likes', String(data.count));
+            }
+        } catch {
+            // Keep the optimistic local increment if shared storage is unavailable.
+        } finally {
+            setIsSyncing(false);
+        }
     };
 
     return (
@@ -101,7 +147,7 @@ const HeartButton = () => {
             </motion.span>
             <span>{likes}</span>
             <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#e8d8c9]/45">
-                {liked ? 'Thank you' : ''}
+                {liked ? (isSyncing ? 'Saving' : 'Thank you') : ''}
             </span>
         </motion.button>
     );

@@ -29,7 +29,7 @@ const Layer1 = () => {
     }, 2650);
     const homeTimer = window.setTimeout(() => {
       setIsHomeReady(true);
-    }, 3220);
+    }, 2760);
 
     return () => {
       window.clearTimeout(bootTimer);

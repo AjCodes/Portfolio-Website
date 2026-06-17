@@ -262,11 +262,11 @@ const ProjectsView = () => {
     }, [moveProject]);
 
     return (
-        <section id="projects" className="relative min-h-screen overflow-hidden border-b border-[#e8d8c9]/8 bg-[#151515] px-5 py-24 sm:px-10 md:py-10 lg:pl-44 lg:pr-10">
+        <section id="projects" className="relative min-h-screen overflow-hidden border-b border-[#e8d8c9]/8 bg-[#151515] px-5 py-16 sm:px-10 md:py-6 lg:pl-44 lg:pr-10">
             <ScrollReveal preset="fade-up" duration={0.8} threshold={0.1}>
-                <div className="relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] max-w-[86rem] flex-col">
+                <div className="relative z-10 mx-auto flex min-h-[calc(100vh-2.5rem)] max-w-[86rem] flex-col md:min-h-[calc(100vh-1.5rem)]">
                     {/* ─── Section heading ─── */}
-                    <ScrollReveal preset="fade-left" delay={0.1} className="mb-5 pt-0 md:mb-8 md:pt-4">
+                    <ScrollReveal preset="fade-left" delay={0.1} className="mb-4 pt-0 md:mb-5">
                         <h2 className="font-display text-3xl font-bold text-[#e8d8c9] lg:text-4xl">
                             Selected Work
                         </h2>
