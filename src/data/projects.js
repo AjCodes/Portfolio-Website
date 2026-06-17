@@ -1,35 +1,7 @@
 export const projects = [
   {
-    id: 'cardan',
-    number: '01',
-    title: 'Cardan Accessibility Project',
-    type: 'UX / Accessibility / Client Project',
-    description: "An accessibility-focused interactive experience connected to Parkinson's motor symptoms. The goal was to create empathy, awareness, and real-time interaction.",
-    role: 'UX research, interaction design, visual design, front-end development',
-    tools: ['Figma', 'HTML', 'CSS', 'JavaScript'],
-    year: '2026',
-    accent: '#f3701e',
-    tags: [
-      {
-        id: 'interaction-video',
-        label: 'Interaction video',
-        media: [
-          {
-            type: 'video',
-            src: '/media/projects/cardan.mov',
-            label: 'Interaction video'
-          }
-        ]
-      }
-    ],
-    links: {
-      github: 'https://git.fhict.nl/I575028/cardan-project',
-      live: null
-    }
-  },
-  {
     id: 'smart-roads',
-    number: '02',
+    number: '01',
     title: 'Smart Roads',
     type: 'IoT / Backend / Group Project',
     description: 'A smart traffic light system using ESP32 sensors, Firebase, and a Node.js/Express backend.',
@@ -57,6 +29,34 @@ export const projects = [
     ],
     links: {
       github: 'https://github.com/AjCodes/Smart-Roads',
+      live: null
+    }
+  },
+  {
+    id: 'cardan',
+    number: '02',
+    title: 'Cardan Accessibility Project',
+    type: 'UX / Accessibility / Client Project',
+    description: "An accessibility-focused interactive experience connected to Parkinson's motor symptoms. The goal was to create empathy, awareness, and real-time interaction.",
+    role: 'UX research, interaction design, visual design, front-end development',
+    tools: ['Figma', 'HTML', 'CSS', 'JavaScript'],
+    year: '2026',
+    accent: '#f3701e',
+    tags: [
+      {
+        id: 'interaction-video',
+        label: 'Interaction video',
+        media: [
+          {
+            type: 'video',
+            src: '/media/projects/cardan.mov',
+            label: 'Interaction video'
+          }
+        ]
+      }
+    ],
+    links: {
+      github: 'https://git.fhict.nl/I575028/cardan-project',
       live: null
     }
   },

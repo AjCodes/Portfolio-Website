@@ -8,6 +8,7 @@ function App() {
     <SpotifyProvider>
       <div className="relative min-h-screen w-full bg-[#181818]">
         <Layer1 />
+        <SpeedInsights />
       </div>
     </SpotifyProvider>
   );
