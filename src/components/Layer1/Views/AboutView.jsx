@@ -130,6 +130,7 @@ const HeartButton = () => {
         <motion.button
             type="button"
             onClick={handleLike}
+            data-testid="like-button"
             className={`group relative inline-flex min-h-12 items-center justify-center gap-3 overflow-hidden rounded-2xl border px-6 py-3 text-sm font-bold transition-colors ${liked
                 ? 'border-primary/55 bg-primary/14 text-white'
                 : 'border-[#e8d8c9]/14 bg-[#e8d8c9]/6 text-[#e8d8c9]/75 hover:border-primary/45 hover:text-white'
@@ -302,7 +303,7 @@ const JourneyMap = () => {
 
 const AboutView = () => {
     return (
-        <section id="about" className="relative flex min-h-screen items-center overflow-hidden bg-[#151515] px-6 py-10 sm:px-10 lg:pl-44 lg:pr-10">
+        <section id="about" data-testid="about-section" className="relative flex min-h-screen items-center overflow-hidden bg-[#151515] px-6 py-10 sm:px-10 lg:pl-44 lg:pr-10">
             <div className="pointer-events-none absolute inset-0 bg-[#151515]" />
             <div className="relative z-10 mx-auto grid w-full max-w-7xl gap-5 lg:grid-cols-[0.82fr_1.18fr]">
                 <div className="grid gap-3">
@@ -332,11 +333,11 @@ const AboutView = () => {
                                 </p>
                             </div>
 
-                            <div className="mt-4">
+                            <div className="mt-4" data-testid="spotify-widget">
                                 <SpotifyPlayer inline />
                             </div>
 
-                            <div className="mt-4 border-t border-[#e8d8c9]/10 pt-4">
+                            <div className="mt-4 border-t border-[#e8d8c9]/10 pt-4" data-testid="tech-stack">
                                 <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-primary">Tech stack</p>
                                 <ScrollReveal preset="scale-in" stagger={0.03} className="flex flex-wrap gap-2">
                                     {techGroups.flat().map((tech) => (
@@ -363,7 +364,7 @@ const AboutView = () => {
                         delay={0.25}
                     >
                         <div className="rounded-[1.5rem] border border-[#e8d8c9]/10 bg-[#181818]/82 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.34)] backdrop-blur-xl">
-                        <div>
+                        <div data-testid="contact-section">
                                 <div className="flex flex-wrap items-center justify-between gap-3">
                                     <p className="font-display text-2xl font-bold leading-tight text-[#e8d8c9] sm:text-[1.65rem]">
                                         Let&apos;s Connect

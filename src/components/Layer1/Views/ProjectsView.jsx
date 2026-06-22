@@ -134,7 +134,7 @@ const ProjectCard = ({ project }) => {
     const selectedTag = project.tags.find((tag) => tag.id === activeTag);
 
     return (
-        <article data-native-scroll className="grid w-full grid-cols-1 gap-4 rounded-[1.5rem] border border-[#e8d8c9]/10 bg-[#181818]/82 p-3 shadow-[0_28px_90px_rgba(0,0,0,0.35)] backdrop-blur-xl md:min-h-[32rem] md:rounded-[1.75rem] md:p-4 lg:grid-cols-[0.38fr_0.62fr] lg:p-5">
+        <article data-native-scroll data-testid="project-card" className="grid w-full grid-cols-1 gap-4 rounded-[1.5rem] border border-[#e8d8c9]/10 bg-[#181818]/82 p-3 shadow-[0_28px_90px_rgba(0,0,0,0.35)] backdrop-blur-xl md:min-h-[32rem] md:rounded-[1.75rem] md:p-4 lg:grid-cols-[0.38fr_0.62fr] lg:p-5">
             <div className="flex flex-col justify-between p-1 lg:p-3">
                 <div>
                     <p className="font-mono text-3xl font-bold leading-none text-primary/20 md:text-5xl">{project.number}</p>
@@ -171,6 +171,7 @@ const ProjectCard = ({ project }) => {
                             href={project.links.github}
                             target="_blank"
                             rel="noreferrer"
+                            data-testid="project-link"
                             className="rounded-full border border-[#e8d8c9]/14 bg-[#e8d8c9]/8 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#e8d8c9]/68 transition-colors hover:border-primary/55 hover:text-white"
                         >
                             View project
@@ -262,7 +263,7 @@ const ProjectsView = () => {
     }, [moveProject]);
 
     return (
-        <section id="projects" className="relative min-h-screen overflow-hidden border-b border-[#e8d8c9]/8 bg-[#151515] px-5 py-16 sm:px-10 md:py-6 lg:pl-44 lg:pr-10">
+        <section id="projects" data-testid="projects-section" className="relative min-h-screen overflow-hidden border-b border-[#e8d8c9]/8 bg-[#151515] px-5 py-16 sm:px-10 md:py-6 lg:pl-44 lg:pr-10">
             <ScrollReveal preset="fade-up" duration={0.8} threshold={0.1}>
                 <div className="relative z-10 mx-auto flex min-h-[calc(100vh-2.5rem)] max-w-[86rem] flex-col md:min-h-[calc(100vh-1.5rem)]">
                     {/* ─── Section heading ─── */}

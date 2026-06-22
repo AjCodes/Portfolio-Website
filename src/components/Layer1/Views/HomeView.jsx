@@ -7,7 +7,7 @@ const HomeView = ({ isReady = true }) => {
     const screenScale = useTransform(scrollYProgress, [0, 0.25], [1, 0.92]);
 
     return (
-        <section id="home" className="relative flex min-h-screen overflow-hidden border-b border-[#e8d8c9]/8">
+        <section id="home" data-testid="home-section" className="relative flex min-h-screen overflow-hidden border-b border-[#e8d8c9]/8">
             <div className="pointer-events-none absolute inset-0 bg-[#151515]" />
 
             <div className="relative z-10 grid w-full items-center gap-10 px-6 py-28 sm:px-10 lg:grid-cols-[0.52fr_0.48fr] lg:pl-48 lg:pr-16">
@@ -46,6 +46,7 @@ const HomeView = ({ isReady = true }) => {
                     >
                         <a
                             href="#projects"
+                            data-testid="hero-work-cta"
                             className="rounded-full bg-primary px-6 py-3 text-sm font-bold text-white shadow-[0_14px_34px_rgba(243,112,30,0.24)] transition-transform hover:-translate-y-0.5"
                         >
                             View My Work
